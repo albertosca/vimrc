@@ -8,6 +8,9 @@ set cursorline
 highlight ColorColumn ctermbg=235 guibg=#2c2d27
 let &colorcolumn="90,".join(range(90,999),",")
 
+" Default colorscheme
+colorscheme gruvbox
+
 "autocmd BufWritePre *.* :%s/\t/  /g
 
 "Sets numbers to be always shown
@@ -35,6 +38,9 @@ nnoremap <C-H> <C-W><C-H>
 " Display tabs and trailing spaces visually
 set list listchars=tab:\ \ ,trail:·
 
+" Navigate to previous tab
+nnoremap gr  :tabprev<CR>
+
 " scrolling
 set scrolloff=8         "Start scrolling when we're 8 lines away from margins
 set sidescrolloff=15
@@ -60,6 +66,7 @@ set tw=80
 
 " No default paste mode ruining my visual blocks
 :set nopaste
+command! Vb normal! <C-v>
 
 " Codeclimate
 nmap <Leader>af :CodeClimateAnalyzeCurrentFile<CR>
