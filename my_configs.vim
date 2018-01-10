@@ -61,11 +61,11 @@ set foldmethod=indent
 set foldlevel=1
 au BufRead * normal zR
 
-" After 80 columns, vim reformats the line for you
-set tw=80
+" After 90 columns, vim reformats the line for you
+set tw=90
 
 " No default paste mode ruining my visual blocks
-:set nopaste
+set nopaste
 command! Vb normal! <C-v>
 
 " Codeclimate
