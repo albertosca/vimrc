@@ -86,3 +86,6 @@ let g:syntastic_javascript_eslint_exe='$(npm bin)/eslint'
 " Copy filename, without and with path
 nmap ,cs :let @+=expand("%")<CR>
 nmap ,cl :let @+=expand("%:p")<CR>
+
+" Unify clipboards, so visual selection copies in and out of vim
+set clipboard=unnamedplus
