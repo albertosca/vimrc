@@ -10,6 +10,7 @@ let &colorcolumn="90,".join(range(90,999),",")
 
 " Default colorscheme
 colorscheme gruvbox
+set background=dark    " Setting dark mode
 
 "autocmd BufWritePre *.* :%s/\t/  /g
 
