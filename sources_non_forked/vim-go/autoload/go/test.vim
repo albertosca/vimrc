@@ -72,6 +72,8 @@ function! go#test#Test(bang, compile, ...) abort
 
   let command = "go " . join(args, ' ')
   let out = go#tool#ExecuteInDir(command)
+  " TODO(bc): When the output is JSON, the JSON should be run through a
+  " filter to produce lines that are more easily described by errorformat.
 
   let l:listtype = go#list#Type("GoTest")
 

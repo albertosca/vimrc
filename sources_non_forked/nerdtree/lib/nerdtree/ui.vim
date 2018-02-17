@@ -96,7 +96,7 @@ function! s:UI._dumpHelp()
         let help .= "\" ". g:NERDTreeMapToggleFiles .": files (" . (self.getShowFiles() ? "on" : "off") . ")\n"
         let help .= "\" ". g:NERDTreeMapToggleBookmarks .": bookmarks (" . (self.getShowBookmarks() ? "on" : "off") . ")\n"
 
-        "add quickhelp entries for each custom key map
+        " add quickhelp entries for each custom key map
         let help .= "\"\n\" ----------------------------\n"
         let help .= "\" Custom mappings~\n"
         for i in g:NERDTreeKeyMap.All()
@@ -127,7 +127,7 @@ function! s:UI._dumpHelp()
 endfunction
 
 
-"FUNCTION: s:UI.new(nerdtree) {{{1
+" FUNCTION: s:UI.new(nerdtree) {{{1
 function! s:UI.New(nerdtree)
     let newObj = copy(self)
     let newObj.nerdtree = a:nerdtree
