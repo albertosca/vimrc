@@ -34,6 +34,17 @@ inoremap <M-k> <Esc>:m .-2<CR>==gi
 vnoremap <M-j> :m '>+1<CR>gv=gv
 vnoremap <M-k> :m '<-2<CR>gv=gv
 
+" Move vim tabs with ctrl+shift+arrow right or left
+nnoremap <C-S-h> :tabmove -1<cr>
+nnoremap <C-S-l> :tabmove +1<cr>
+inoremap <C-S-h> :tabmove -1<cr>
+inoremap <C-S-l> :tabmove +1<cr>
+vnoremap <C-S-h> :tabmove -1<cr>
+vnoremap <C-S-l> :tabmove +1<cr>
+nnoremap <C-t> <Esc> :tabe<CR>
+inoremap <C-t> <Esc> :tabe<CR>
+vnoremap <C-t> <Esc> :tabnew<CR>
+
 "Multiple cursors net key
 let g:multi_cursor_next_key="<C-n>"
 
