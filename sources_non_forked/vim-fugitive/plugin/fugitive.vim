@@ -308,10 +308,6 @@ function! fugitive#repo(...) abort
   return call('s:repo', a:000)
 endfunction
 
-function! fugitive#Repo(...) abort
-  return call('s:repo', a:000)
-endfunction
-
 function! s:repo_dir(...) dict abort
   return join([self.git_dir]+a:000,'/')
 endfunction
@@ -568,10 +564,6 @@ function! s:buffer(...) abort
 endfunction
 
 function! fugitive#buffer(...) abort
-  return s:buffer(a:0 ? a:1 : '%')
-endfunction
-
-function! fugitive#Buffer(...) abort
   return s:buffer(a:0 ? a:1 : '%')
 endfunction
 
@@ -1428,17 +1420,23 @@ endfunction
 
 " Section: Gedit, Gpedit, Gsplit, Gvsplit, Gtabedit, Gread
 
+function! s:UsableWin(nr) abort
+  return a:nr && !getwinvar(a:nr, '&previewwindow') &&
+        \ index(['nofile','help','quickfix'], getbufvar(winbufnr(a:nr), '&buftype')) < 0
+endfunction
+
 function! s:Edit(cmd,bang,...) abort
   let buffer = s:buffer()
   if a:cmd !~# 'read'
     if &previewwindow && getbufvar('','fugitive_type') ==# 'index'
-      if winnr('$') == 1
+      let winnrs = filter([winnr('#')] + range(1, winnr('$')), 's:UsableWin(v:val)')
+      if len(winnrs)
+        exe winnrs[0].'wincmd w'
+      elseif winnr('$') == 1
         let tabs = (&go =~# 'e' || !has('gui_running')) && &stal && (tabpagenr('$') >= &stal)
         execute 'rightbelow' (&lines - &previewheight - &cmdheight - tabs - 1 - !!&laststatus).'new'
-      elseif winnr('#')
-        wincmd p
       else
-        wincmd w
+        rightbelow new
       endif
       if &diff
         let mywinnr = winnr()
@@ -2569,9 +2567,10 @@ function! s:ReplaceCmd(cmd,...) abort
       let $GIT_INDEX_FILE = old_index
     endif
   endtry
+  silent exe 'doau BufReadPre '.s:fnameescape(fn)
   silent exe 'keepalt file '.tmp
   try
-    silent edit!
+    silent noautocmd edit!
   finally
     try
       silent exe 'keepalt file '.s:fnameescape(fn)
@@ -2637,7 +2636,7 @@ function! s:BufReadIndex() abort
     nnoremap <buffer> <silent> a :<C-U>let b:fugitive_display_format += 1<Bar>exe <SID>BufReadIndex()<CR>
     nnoremap <buffer> <silent> i :<C-U>let b:fugitive_display_format -= 1<Bar>exe <SID>BufReadIndex()<CR>
     nnoremap <buffer> <silent> C :<C-U>Gcommit<CR>:echohl WarningMsg<Bar>echo ':Gstatus C is deprecated in favor of cc'<Bar>echohl NONE<CR>
-    nnoremap <buffer> <silent> cA :<C-U>Gcommit --amend --reuse-message=HEAD<CR>
+    nnoremap <buffer> <silent> cA :<C-U>Gcommit --amend --reuse-message=HEAD<CR>:echohl WarningMsg<Bar>echo ':Gstatus cA is deprecated in favor of ce'<CR>
     nnoremap <buffer> <silent> ca :<C-U>Gcommit --amend<CR>
     nnoremap <buffer> <silent> cc :<C-U>Gcommit<CR>
     nnoremap <buffer> <silent> ce :<C-U>Gcommit --amend --no-edit<CR>
