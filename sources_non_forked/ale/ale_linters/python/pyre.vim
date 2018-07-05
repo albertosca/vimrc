@@ -23,6 +23,7 @@ call ale#linter#Define('python', {
 \   'lsp': 'stdio',
 \   'executable_callback': 'ale_linters#python#pyre#GetExecutable',
 \   'command_callback': 'ale_linters#python#pyre#GetCommand',
+\   'language': 'python',
 \   'project_root_callback': 'ale#python#FindProjectRoot',
 \   'completion_filter': 'ale#completion#python#CompletionItemFilter',
 \})
