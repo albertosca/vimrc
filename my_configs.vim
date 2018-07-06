@@ -111,3 +111,6 @@ nmap ,cl :let @+=expand("%:p")<CR>
 
 " Unify clipboards, so visual selection copies in and out of vim
 set clipboard=unnamedplus
+
+" File extensions where tags are auto closed
+let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.js,*.erb"
