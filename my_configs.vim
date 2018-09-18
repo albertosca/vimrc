@@ -1,7 +1,10 @@
-"Clear trailing whitespaces
+" Basic encoding is basic
+set encoding=UTF-8
+
+" Clear trailing whitespaces
 autocmd BufWritePre *.* :%s/\s\+$//e
 
-"Highlight cursor line
+" Highlight cursor line
 set cursorline
 
 " column with 90
@@ -110,7 +113,42 @@ nmap ,cs :let @+=expand("%")<CR>
 nmap ,cl :let @+=expand("%:p")<CR>
 
 " Unify clipboards, so visual selection copies in and out of vim
-set clipboard=unnamedplus
+set clipboard=unnamed
 
 " File extensions where tags are auto closed
 let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.js,*.erb"
+
+" Ale linter personal configs
+let g:ale_linters = {
+\   'javascript': ['jshint',  'eslint'],
+\   'css': ['csslint'],
+\   'scss': ['scss-lint'],
+\   'python': ['flake8'],
+\   'go': ['go', 'golint', 'errcheck'],
+\   'elixir': ['credo'],
+\   'graphql': ['eslint'],
+\   'ruby': ['rubocop']
+\}
+
+nmap <silent> <leader>a <Plug>(ale_next_wrap)
+
+" -- Enabling highlighting
+let g:ale_set_highlights = 1
+
+" -- Rub linting all the timeish
+let g:ale_lint_on_text_changed = 'always'
+let g:ale_lint_on_enter = 1
+let g:ale_lint_delay = get(g:, 'ale_lint_delay', 200)
+
+" Configuring vim mix format
+let g:mix_format_on_save = 1
+nmap <Leader>mf :MixFormat<CR>
+nmap <Leader>md :MixFormatDiff<CR>
+
+" Vim test
+let test#strategy = "vimux"
+nmap <Leader>tn :TestNearest<CR>
+nmap <Leader>tf :TestFile<CR>
+nmap <Leader>ts :TestSuite<CR>
+nmap <Leader>tl :TestLast<CR>
+nmap <Leader>tv :TestVisit<CR>

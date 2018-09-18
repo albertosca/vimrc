@@ -61,9 +61,13 @@ endfunction
 
 " Check if Vim jobs API is supported.
 "
-" The (optional) first paramter can be added to indicate the 'cwd' or 'env'
+" The (optional) first parameter can be added to indicate the 'cwd' or 'env'
 " parameters will be used, which wasn't added until a later version.
 function! go#util#has_job(...) abort
+  if has('nvim')
+    return 1
+  endif
+
   " cwd and env parameters to job_start was added in this version.
   if a:0 > 0 && a:1 is 1
     return has('job') && has("patch-8.0.0902")
@@ -167,13 +171,16 @@ function! go#util#Exec(cmd, ...) abort
 
   let l:bin = a:cmd[0]
 
+  " Lookup the full path, respecting settings such as 'go_bin_path'. On errors,
   " CheckBinPath will show a warning for us.
   let l:bin = go#path#CheckBinPath(l:bin)
   if empty(l:bin)
     return ['', 1]
   endif
 
-  return call('s:exec', [a:cmd] + a:000)
+  " Finally execute the command using the full, resolved path. Do not pass the
+  " unmodified command as the correct program might not exist in $PATH.
+  return call('s:exec', [[l:bin] + a:cmd[1:]] + a:000)
 endfunction
 
 function! s:exec(cmd, ...) abort

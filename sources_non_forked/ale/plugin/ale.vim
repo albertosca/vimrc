@@ -14,7 +14,7 @@ let g:loaded_ale_dont_use_this_in_other_plugins_please = 1
 
 " A flag for detecting if the required features are set.
 if has('nvim')
-    let s:has_features = has('timers')
+    let s:has_features = has('timers') && has('nvim-0.2.0')
 else
     " Check if Job and Channel functions are available, instead of the
     " features. This works better on old MacVim versions.
@@ -24,7 +24,7 @@ endif
 if !s:has_features
     " Only output a warning if editing some special files.
     if index(['', 'gitcommit'], &filetype) == -1
-        execute 'echoerr ''ALE requires NeoVim >= 0.1.5 or Vim 8 with +timers +job +channel'''
+        execute 'echoerr ''ALE requires NeoVim >= 0.2.0 or Vim 8 with +timers +job +channel'''
         execute 'echoerr ''Please update your editor appropriately.'''
     endif
 
@@ -34,12 +34,6 @@ endif
 
 " Set this flag so that other plugins can use it, like airline.
 let g:loaded_ale = 1
-
-" Set the TMPDIR environment variable if it is not set automatically.
-" This can automatically fix some environments.
-if has('unix') && empty($TMPDIR)
-    let $TMPDIR = '/tmp'
-endif
 
 " This global variable is used internally by ALE for tracking information for
 " each buffer which linters are being run against.
@@ -115,11 +109,15 @@ let g:ale_set_highlights = get(g:, 'ale_set_highlights', has('syntax'))
 " This flag can be set to 0 to disable echoing when the cursor moves.
 let g:ale_echo_cursor = get(g:, 'ale_echo_cursor', 1)
 
+" This flag can be set to 1 to automatically show errors in the preview window.
+let g:ale_cursor_detail = get(g:, 'ale_cursor_detail', 0)
+
+" This flag can be set to 1 to automatically close the preview window upon
+" entering Insert Mode.
+let g:ale_close_preview_on_insert = get(g:, 'ale_close_preview_on_insert', 0)
+
 " This flag can be set to 0 to disable balloon support.
-let g:ale_set_balloons = get(g:, 'ale_set_balloons',
-\   (has('balloon_eval') && has('gui_running'))
-\   || (has('balloon_eval_term') && !has('gui_running'))
-\)
+let g:ale_set_balloons = get(g:, 'ale_set_balloons', has('balloon_eval') && has('gui_running'))
 
 " This flag can be set to 0 to disable warnings for trailing whitespace
 let g:ale_warn_about_trailing_whitespace = get(g:, 'ale_warn_about_trailing_whitespace', 1)
@@ -226,4 +224,8 @@ augroup ALECleanupGroup
     " Clean up buffers automatically when they are unloaded.
     autocmd BufDelete * if exists('*ale#engine#Cleanup') | call ale#engine#Cleanup(str2nr(expand('<abuf>'))) | endif
     autocmd QuitPre * call ale#events#QuitEvent(str2nr(expand('<abuf>')))
+
+    if exists('##VimSuspend')
+      autocmd VimSuspend * if exists('*ale#engine#CleanupEveryBuffer') | call ale#engine#CleanupEveryBuffer() | endif
+    endif
 augroup END
