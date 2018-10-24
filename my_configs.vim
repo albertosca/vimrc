@@ -113,14 +113,22 @@ nmap ,cs :let @+=expand("%")<CR>
 nmap ,cl :let @+=expand("%:p")<CR>
 
 " Unify clipboards, so visual selection copies in and out of vim
-set clipboard=unnamed
+set clipboard=unnamedplus
 
 " File extensions where tags are auto closed
 let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.js,*.erb"
 
 " Ale linter personal configs
+augroup FiletypeGroup
+    autocmd!
+    au BufNewFile,BufRead *.jsx set filetype=javascript.jsx
+augroup END
+
+let g:ale_linter_aliases = {'jsx': 'css'}
 let g:ale_linters = {
 \   'javascript': ['jshint',  'eslint'],
+\   'jsx': ['stylelint', 'eslint', 'tslint', 'tsserver'],
+\   'typescript': ['tslint', 'tsserver', 'eslint'],
 \   'css': ['csslint'],
 \   'scss': ['scss-lint'],
 \   'python': ['flake8'],
@@ -152,3 +160,6 @@ nmap <Leader>tf :TestFile<CR>
 nmap <Leader>ts :TestSuite<CR>
 nmap <Leader>tl :TestLast<CR>
 nmap <Leader>tv :TestVisit<CR>
+
+" Remove warning due to old vim version
+let g:go_version_warning = 0
