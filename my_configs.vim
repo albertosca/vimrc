@@ -87,7 +87,7 @@ set foldlevel=1
 au BufRead * normal zR
 
 " After 90 columns, vim reformats the line for you
-set tw=90
+" set tw=90
 
 " No default paste mode ruining my visual blocks
 set nopaste
