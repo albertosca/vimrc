@@ -14,7 +14,7 @@ import requests
 from os import path
 
 
-#--- Globals ----------------------------------------------
+# --- Globals ----------------------------------------------
 PLUGINS = """
 auto-pairs https://github.com/jiangmiao/auto-pairs
 ale https://github.com/w0rp/ale
