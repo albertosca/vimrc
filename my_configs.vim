@@ -354,3 +354,6 @@ let g:snipMate = { 'snippet_version' : 1 }
 " Endwise
 " disable mapping to not break coc.nvim (I don't even use them anyways)
 let g:endwise_no_mappings = 1
+
+
+let g:coc_global_extensions = ['coc-json', 'coc-git', 'coc-css', 'coc-snippets', 'coc-browser', 'coc-docker', 'coc-elixir', 'coc-dash-complete', 'coc-dot-complete', 'coc-graphql', 'coc-html', 'coc-java', 'coc-markdownlint', 'coc-prettier', 'coc-sh', 'coc-texlab', 'coc-yaml', 'coc-yank', 'coc-xml', 'coc-rome', 'coc-powershell', 'coc-stylelint', 'coc-stylelintplus']
