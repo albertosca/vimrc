@@ -9,7 +9,7 @@ set cursorline
 
 " column with 90
 highlight ColorColumn ctermbg=235 guibg=#2c2d27
-let &colorcolumn="90,".join(range(90,999),",")
+let &colorcolumn="100,".join(range(100,999),",")
 
 " Default colorscheme
 colorscheme gruvbox
@@ -356,4 +356,4 @@ let g:snipMate = { 'snippet_version' : 1 }
 let g:endwise_no_mappings = 1
 
 
-let g:coc_global_extensions = ['coc-json', 'coc-git', 'coc-css', 'coc-snippets', 'coc-browser', 'coc-docker', 'coc-elixir', 'coc-dash-complete', 'coc-dot-complete', 'coc-eslint', 'coc-html', 'coc-java', 'coc-markdownlint', 'coc-prettier', 'coc-sh', 'coc-texlab', 'coc-yaml', 'coc-yank', 'coc-xml', 'coc-rome', 'coc-powershell', 'coc-stylelint', 'coc-stylelintplus', 'coc-tabnine']
+let g:coc_global_extensions = ['coc-json', 'coc-git', 'coc-css', 'coc-snippets', 'coc-browser', 'coc-docker', 'coc-elixir', 'coc-dash-complete', 'coc-dot-complete', 'coc-eslint', 'coc-html', 'coc-java', 'coc-markdownlint', 'coc-prettier', 'coc-sh', 'coc-texlab', 'coc-yaml', 'coc-yank', 'coc-xml', 'coc-rome', 'coc-powershell', 'coc-tabnine']
