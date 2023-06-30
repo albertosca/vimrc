@@ -16,6 +16,7 @@ from os import path
 
 # --- Globals ----------------------------------------------
 PLUGINS = """
+coc.nvim https://github.com/neoclide/coc.nvim.git
 auto-pairs https://github.com/jiangmiao/auto-pairs
 ale https://github.com/w0rp/ale
 vim-yankstack https://github.com/maxbrunsfeld/vim-yankstack

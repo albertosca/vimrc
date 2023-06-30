@@ -52,28 +52,24 @@ function! ale#lsp#message#Exit() abort
 endfunction
 
 function! ale#lsp#message#DidOpen(buffer, language_id) abort
-    let l:lines = getbufline(a:buffer, 1, '$')
-
     return [1, 'textDocument/didOpen', {
     \   'textDocument': {
     \       'uri': ale#util#ToURI(expand('#' . a:buffer . ':p')),
     \       'languageId': a:language_id,
     \       'version': ale#lsp#message#GetNextVersionID(),
-    \       'text': join(l:lines, "\n") . "\n",
+    \       'text': ale#util#GetBufferContents(a:buffer),
     \   },
     \}]
 endfunction
 
 function! ale#lsp#message#DidChange(buffer) abort
-    let l:lines = getbufline(a:buffer, 1, '$')
-
     " For changes, we simply send the full text of the document to the server.
     return [1, 'textDocument/didChange', {
     \   'textDocument': {
     \       'uri': ale#util#ToURI(expand('#' . a:buffer . ':p')),
     \       'version': ale#lsp#message#GetNextVersionID(),
     \   },
-    \   'contentChanges': [{'text': join(l:lines, "\n") . "\n"}]
+    \   'contentChanges': [{'text': ale#util#GetBufferContents(a:buffer)}]
     \}]
 endfunction
 
@@ -132,6 +128,15 @@ endfunction
 
 function! ale#lsp#message#TypeDefinition(buffer, line, column) abort
     return [0, 'textDocument/typeDefinition', {
+    \   'textDocument': {
+    \       'uri': ale#util#ToURI(expand('#' . a:buffer . ':p')),
+    \   },
+    \   'position': {'line': a:line - 1, 'character': a:column - 1},
+    \}]
+endfunction
+
+function! ale#lsp#message#Implementation(buffer, line, column) abort
+    return [0, 'textDocument/implementation', {
     \   'textDocument': {
     \       'uri': ale#util#ToURI(expand('#' . a:buffer . ':p')),
     \   },
