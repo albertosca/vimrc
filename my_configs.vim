@@ -18,7 +18,11 @@ set background=dark    " Setting dark mode
 " yank to clipboard
 set clipboard=unnamed " copy to the system clipboard
 
-"autocmd BufWritePre *.* :%s/\t/  /g
+" markdown previewr
+
+nnoremap <leader>mdp :CocCommand markdown-preview-enhanced.openPreview<CR>
+nnoremap <leader>mdt :CocCommand markdown-preview-enhanced.insertTable<CR>
+nnoremap <leader>mdl :CocList --input=markdown-preview-enhanced. commands<CR>
 
 "Sets numbers to be always shown
 set nu
@@ -292,6 +296,9 @@ nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Run the Code Lens action on the current line.
 nmap <leader>cl  <Plug>(coc-codelens-action)
+
+" Comment highlighting with coc-markdown-previewer
+autocmd FileType json syntax match Comment +\/\/.\+$+
 
 " Map function and class text objects
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
