@@ -156,9 +156,9 @@ let g:ale_fixers = {
 \}
 
 " -- Rub linting all the timeish
-let g:ale_lint_on_text_changed = 'always'
-let g:ale_lint_on_enter = 1
-let g:ale_lint_delay = get(g:, 'ale_lint_delay', 200)
+" let g:ale_lint_on_text_changed = 'always'
+" let g:ale_lint_on_enter = 1
+" let g:ale_lint_delay = get(g:, 'ale_lint_delay', 200)
 let g:ale_fix_on_save = 1
 
 " Configuring vim mix format
@@ -181,7 +181,6 @@ let g:go_version_warning = 0
 let g:ale_completion_enabled = 0
 call ale#completion#Disable()
 inoremap <silent><C-a> <C-\><C-O>:call ale#completion#GetCompletions()<CR>
-let g:ale_enabled=0
 
 " " Prettier config
 " let g:prettier#config#arrow_parens = 'always'
@@ -367,5 +366,6 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " disable mapping to not break coc.nvim (I don't even use them anyways)
 let g:endwise_no_mappings = 1
 
-
 let g:coc_global_extensions = ['coc-json', 'coc-git', 'coc-css', 'coc-browser', 'coc-docker', 'coc-elixir', 'coc-eslint', 'coc-html', 'coc-java', 'coc-markdownlint', 'coc-prettier', 'coc-sh', 'coc-texlab', 'coc-yaml', 'coc-yank', 'coc-xml', 'coc-rome', 'coc-powershell']
+
+let b:coc_suggest_disable = 1
