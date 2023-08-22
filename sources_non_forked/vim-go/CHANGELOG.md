@@ -21,6 +21,7 @@ IMPROVEMENTS:
 * Halt the debugger after a connection is establish with `:GoDebugConnect`.
   [[GH-3514]](https://github.com/fatih/vim-go/pull/3514)
   [[GH-3520]](https://github.com/fatih/vim-go/pull/3520)
+  [[GH-3570]](https://github.com/fatih/vim-go/pull/3570)
 * Clarify `:GoImpl` usage message.
   [[GH-3522]](https://github.com/fatih/vim-go/pull/3522)
 * Add commands and mappings related to godoc to the godoc preview window.
@@ -41,6 +42,8 @@ IMPROVEMENTS:
   [[GH-3555]](https://github.com/fatih/vim-go/pull/3555)
 * Drop support for Vim 8.0.
   [[GH-3538]](https://github.com/fatih/vim-go/pull/3538)
+* Set gopls clientInfo field.
+  [[GH-3567]](https://github.com/fatih/vim-go/pull/3567)
 
 BUG FIXES:
 * Update [impl](https://github.com/josharian/impl) source path after its default branch was changed from master to main.

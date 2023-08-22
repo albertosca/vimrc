@@ -223,13 +223,14 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1] =~'\s'
 endfunction
 
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" : coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" " Use tab for trigger completion with characters ahead and navigate.
+" " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" " other plugin before putting this into your config.
+"
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<TAB>" : coc#refresh()
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 " Use <c-space> to trigger completion.
 if has('nvim')
@@ -356,10 +357,9 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-let g:snipMate = { 'snippet_version' : 1 }
 " Endwise
 " disable mapping to not break coc.nvim (I don't even use them anyways)
 let g:endwise_no_mappings = 1
 
 
-let g:coc_global_extensions = ['coc-json', 'coc-git', 'coc-css', 'coc-snippets', 'coc-browser', 'coc-docker', 'coc-elixir', 'coc-dash-complete', 'coc-dot-complete', 'coc-eslint', 'coc-html', 'coc-java', 'coc-markdownlint', 'coc-prettier', 'coc-sh', 'coc-texlab', 'coc-yaml', 'coc-yank', 'coc-xml', 'coc-rome', 'coc-powershell', 'coc-tabnine']
+let g:coc_global_extensions = ['coc-json', 'coc-git', 'coc-css', 'coc-browser', 'coc-docker', 'coc-elixir', 'coc-dash-complete', 'coc-dot-complete', 'coc-eslint', 'coc-html', 'coc-java', 'coc-markdownlint', 'coc-prettier', 'coc-sh', 'coc-texlab', 'coc-yaml', 'coc-yank', 'coc-xml', 'coc-rome', 'coc-powershell', 'coc-tabnine']
