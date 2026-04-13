@@ -1,8 +1,5 @@
 " Basic encoding is basic
-set encoding=UTF-8
-
-" Clear trailing whitespaces
-autocmd BufWritePre *.* :%s/\s\+$//e
+set encoding=utf8
 
 " Highlight cursor line
 set cursorline
@@ -33,16 +30,6 @@ set tabstop=2
 set expandtab
 set softtabstop=2
 set smartindent
-
-" " Move lines up and down using alt+j and alt+k, by @LeandroLM
-" execute "set <M-j>=\ej"
-" execute "set <M-k>=\ek"
-" nnoremap <M-j> :m .+1<CR>==
-" nnoremap <M-k> :m .-2<CR>==
-" inoremap <M-j> <Esc>:m .+1<CR>==gi
-" inoremap <M-k> <Esc>:m .-2<CR>==gi
-" vnoremap <M-j> :m '>+1<CR>gv=gv
-" vnoremap <M-k> :m '<-2<CR>gv=gv
 
 " Move vim tabs with ctrl+shift+arrow right or left
 nnoremap <C-S-h> :tabmove -1<cr>
@@ -82,188 +69,103 @@ set sidescroll=1
 set hlsearch!
 nnoremap <F3> :set hlsearch!<CR>
 
-" Pretty fonts and icons
-set encoding=utf8
-set guifont=Font\ Awesome\ 14
-let g:airline_powerline_fonts=1
+" =============================================================================
+" Ruby & Rails Configuration
+" =============================================================================
+" Navigation handled by vim-rails (use :A, :Rmodel, :Rcontroller)
+let g:ruby_host_prog = 'ruby' " Ensure ruby is in path
 
-" Enable folding
-set foldenable
-set foldmethod=indent
-set foldlevel=1
-au BufRead * normal zR
+" Vim test for Ruby
+let test#ruby#rspec#executable = 'bundle exec rspec'
 
-" After 90 columns, vim reformats the line for you
-" set tw=90
+" =============================================================================
+" Node.js, React & Web Configuration
+" =============================================================================
+" coc-tsserver handles JS/TS/JSX/TSX
+" coc-emmet for fast HTML/JSX expansions
+autocmd FileType html,css,javascriptreact,typescriptreact emmet+
 
-" No default paste mode ruining my visual blocks
-set nopaste
-command! Vb normal! <C-v>
+" Ensure JSX is recognized in .js files
+autocmd BufNewFile,BufRead *.jsx set filetype=javascriptreact
+autocmd BufNewFile,BufRead *.tsx set filetype=typescriptreact
 
-" Codeclimate
-nmap <Leader>af :CodeClimateAnalyzeCurrentFile<CR>
+" =============================================================================
+" Database Configuration (SQL)
+" =============================================================================
+" Use vim-dadbod to run queries (SQL results in a split)
+" Usage: :DB g:my_db_url SELECT * FROM users LIMIT 10
+" URLs: postgres://user:pass@localhost:5432/db_name
+"       mysql://user:pass@localhost:3306/db_name
 
-" Nerdtree opening on left
-let g:NERDTreeWinPos = "left"
-
-" JSX syntax in .js files
-let g:jsx_ext_required = 0
-
-" Configuring syntastic to use ESLint
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_javascript_eslint_exe='$(npm bin)/eslint'
-let g:syntastic_javascript_eslint_exe='$(npm bin)/eslint'
-let g:syntastic_javascript_eslint_exe='$(npm bin)/eslint'
-
-" Copy filename, without and with path
-nmap ,cs :let @+=expand("%")<CR>
-nmap ,cl :let @+=expand("%:p")<CR>
-
-" Unify clipboards, so visual selection copies in and out of vim
-set clipboard=unnamed
-
-" File extensions where tags are auto closed
-let g:closetag_filenames = "*.html,*.xhtml,*.phtml,*.php,*.jsx,*.js,*.erb"
-
-" Ale linter personal configs
-augroup FiletypeGroup
-    autocmd!
-    au BufNewFile,BufRead *.jsx set filetype=javascript.jsx
-augroup END
-
-let g:ale_linter_aliases = {'jsx': 'css'}
-let g:ale_linters = {
-\   'javascript': ['eslint', 'prettier', 'jshint'],
-\   'jsx': ['eslint', 'stylelint', 'tslint', 'tsserver'],
-\   'typescript': ['tslint', 'tsserver', 'eslint'],
-\   'css': ['csslint', 'prettier'],
-\   'scss': ['scss-lint'],
-\   'python': ['flake8'],
-\   'go': ['go', 'golint', 'errcheck'],
-\   'elixir': ['credo'],
-\   'graphql': ['eslint'],
-\   'ruby': ['rubocop']
-\}
-
-nmap <silent> <leader>a <Plug>(ale_next_wrap)
-
-" -- Enabling highlighting
-let g:ale_set_highlights = 1
-
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'javascript': ['eslint'],
-\}
-
-" -- Rub linting all the timeish
-" let g:ale_lint_on_text_changed = 'always'
-" let g:ale_lint_on_enter = 1
-" let g:ale_lint_delay = get(g:, 'ale_lint_delay', 200)
-let g:ale_fix_on_save = 1
+" =============================================================================
+" Elixir Configuration
+" =============================================================================
+" Use coc-elixir for LSP (already in coc_global_extensions)
+" Syntax highlighting is handled by vim-elixir
 
 " Configuring vim mix format
 let g:mix_format_on_save = 1
 nmap <Leader>mf :MixFormat<CR>
 nmap <Leader>md :MixFormatDiff<CR>
 
-" Vim test
+" Vim test for Elixir
+let test#elixir#exunit#executable = 'mix test'
 let test#strategy = "vimux"
-nmap <Leader>tn :TestNearest<CR>
-nmap <Leader>tf :TestFile<CR>
-nmap <Leader>ts :TestSuite<CR>
-nmap <Leader>tl :TestLast<CR>
-nmap <Leader>tv :TestVisit<CR>
 
-" Remove warning due to old vim version
-let g:go_version_warning = 0
+" Vimux: Utility mappings
+nmap <Leader>vp :VimuxPromptCommand<CR>
+nmap <Leader>vl :VimuxRunLastCommand<CR>
+nmap <Leader>vq :VimuxCloseRunner<CR>
+nmap <Leader>vx :VimuxInterruptRunner<CR>
 
-" Do not want autocomplete
-let g:ale_completion_enabled = 0
-call ale#completion#Disable()
-inoremap <silent><C-a> <C-\><C-O>:call ale#completion#GetCompletions()<CR>
+" Elixir: Run Credo for strict linting
+nmap <Leader>lc :call VimuxRunCommand("mix credo --strict")<CR>
 
-" " Prettier config
-" let g:prettier#config#arrow_parens = 'always'
-" let g:prettier#quickfix_enabled = 0
-" let g:prettier#autoformat = 0
-" let g:prettier#config#print_width = 90
-" let g:prettier#config#bracket_spacing = 'true'
-" autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.vue,*.yaml,*.html PrettierAsync
+" Elixir: Open IEx REPL in a split
+nmap <Leader>ie :call VimuxRunCommand("iex -S mix")<CR>
 
-" colo ThemerVim
-let g:lightline = { 'colorscheme': 'ThemerVimLightline' }
+" Elixir: Projectionist configurations (switching between lib and test)
+let g:projectionist_heuristics = {
+      \ "mix.exs": {
+      \   "lib/*.ex": {"alternate": "test/{}_test.exs", "type": "source"},
+      \   "test/*_test.exs": {"alternate": "lib/{}.ex", "type": "test"}
+      \ }}
 
+" Elixir: Surround mappings for 'do ... end'
+" Usage: 'ysiw d' to wrap a word in do/end
+let g:surround_100 = "do\r\nend"
 
+" Auto-format Elixir files using CoC or mix format
+autocmd BufWritePre *.ex,*.exs,*.heex silent! call CocAction('format')
 
+" =============================================================================
+" Pretty fonts and icons
+" =============================================================================
+set guifont=Font\ Awesome\ 14
+let g:airline_powerline_fonts=1
 
+" Enable folding via CoC (much faster than indent)
+set foldmethod=manual
+set foldlevel=99
+augroup coc_folding
+  autocmd!
+  autocmd FileType typescript,json,javascript,python,go,elixir setl formatexpr=CocAction('formatSelected')
+augroup end
 
-" TextEdit might fail if hidden is not set.
-set hidden
+" Disable legacy syntastic/ALE to let CoC handle everything via LSP
+let g:syntastic_javascript_checkers = []
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
 
-" Some servers have issues with backup files, see #649.
-set nobackup
-set nowritebackup
-
-" Give more space for displaying messages.
-set cmdheight=2
-
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
+" Better performance for CoC
 set updatetime=300
-
-" Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
-
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-if has("nvim-0.5.0") || has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1] =~'\s'
-endfunction
-
-" " Use tab for trigger completion with characters ahead and navigate.
-" " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" " other plugin before putting this into your config.
-"
-" inoremap <silent><expr> <TAB>
-"       \ pumvisible() ? "\<C-n>" :
-"       \ <SID>check_back_space() ? "\<TAB>" : coc#refresh()
-" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-" Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
-
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gR <Plug>(coc-references)
+set signcolumn=yes
 
 " Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent> K :call ShowDocumentation()<CR>
 
-function! s:show_documentation()
+function! ShowDocumentation()
   if CocAction('hasProvider', 'hover')
     call CocActionAsync('doHover')
   else
@@ -281,56 +183,6 @@ nmap <leader>rn <Plug>(coc-rename)
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap keys for applying codeAction to the current buffer.
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Run the Code Lens action on the current line.
-nmap <leader>cl  <Plug>(coc-codelens-action)
-
-" Comment highlighting with coc-markdown-previewer
-autocmd FileType json syntax match Comment +\/\/.\+$+
-
-" Map function and class text objects
-" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap af <Plug>(coc-funcobj-a)
-xmap ic <Plug>(coc-classobj-i)
-omap ic <Plug>(coc-classobj-i)
-xmap ac <Plug>(coc-classobj-a)
-omap ac <Plug>(coc-classobj-a)
-
-" Remap <C-f> and <C-b> for scroll float windows/popups.
-if has('nvim-0.4.0') || has('patch-8.2.0750')
-  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-endif
-
-" Use CTRL-S for selections ranges.
-" Requires 'textDocument/selectionRange' support of language server.
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
-
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocActionAsync('format')
 
@@ -340,6 +192,17 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 " Add `:OR` command for organize imports of the current buffer.
 command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
 
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+if has('patch-8.2.0750')
+  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+endif
+
+
 " Add (Neo)Vim's native statusline support.
 " NOTE: Please see `:h coc-status` for integrations with external plugins that
 " provide custom statusline: lightline.vim, vim-airline.
@@ -348,6 +211,18 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " Mappings for CoCList
 " Show all diagnostics.
 nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+
+" Jump to definition with Ctrl+] (LSP aware)
+nmap <silent> <C-]> <Plug>(coc-definition)
+
+" Jump back with Ctrl+t (Reverse jump)
+nmap <silent> <C-t> <C-o>
+
+" macOS specific shortcuts (Cmd+] and Cmd+[)
+if has("mac") || has("macunix")
+  nmap <silent> <D-]> <Plug>(coc-definition)
+  nmap <silent> <D-[> <C-o>
+endif
 " Manage extensions.
 nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
 " Show commands.
@@ -366,6 +241,11 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 " disable mapping to not break coc.nvim (I don't even use them anyways)
 let g:endwise_no_mappings = 1
 
-let g:coc_global_extensions = ['coc-json', 'coc-git', 'coc-css', 'coc-browser', 'coc-docker', 'coc-elixir', 'coc-eslint', 'coc-html', 'coc-java', 'coc-markdownlint', 'coc-prettier', 'coc-sh', 'coc-texlab', 'coc-yaml', 'coc-yank', 'coc-xml', 'coc-rome', 'coc-powershell']
+let g:coc_global_extensions = ['coc-json', 'coc-git', 'coc-css', 'coc-browser', 'coc-docker', 'coc-elixir', 'coc-eslint', 'coc-html', 'coc-java', 'coc-markdownlint', 'coc-prettier', 'coc-sh', 'coc-texlab', 'coc-yaml', 'coc-yank', 'coc-xml', 'coc-rome', 'coc-powershell', 'coc-solargraph', 'coc-emmet', 'coc-sql']
+
+" Auto-pairs: Disable auto-pairing if the next character is a word character
+" This prevents '(' becoming '()' when typed right before a word
+let g:AutoPairsNextClosedPair = ''
+let g:AutoPairsShortcutToggle = '<C-p>' " Allow toggling with Ctrl+p
 
 let b:coc_suggest_disable = 1
