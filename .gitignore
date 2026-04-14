@@ -8,3 +8,8 @@ sources_non_forked/ctrlp.vim/doc/tags*
 # my_configs.vim
 tags
 .DS_Store
+# Erlang/Elixir crash dumps gerados pelo runtime
+erl_crash.dump
+**/erl_crash.dump
+# Diretório de isolamento XDG usado pelos testes
+test/xdg/
