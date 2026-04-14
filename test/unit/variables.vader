@@ -1,0 +1,147 @@
+" UT-028 a UT-040: Variáveis globais e opções do Vim
+" UT-041 a UT-047: vim-surround — pares customizados
+" UT-048 a UT-052: vim-projectionist e CoC extensions
+" UT-057 a UT-060: rooter, test strategy, fzf, FZF_DEFAULT_COMMAND
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-028 a UT-040: Variáveis globais e opções
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-028 mapleader e virgula):
+  AssertEqual ',', mapleader
+
+Execute (UT-029 shiftwidth e 2):
+  AssertEqual 2, &shiftwidth
+
+Execute (UT-030 tabstop e 2):
+  AssertEqual 2, &tabstop
+
+Execute (UT-031 expandtab ativo):
+  AssertEqual 1, &expandtab
+
+Execute (UT-032 scrolloff e 8):
+  AssertEqual 8, &scrolloff
+
+Execute (UT-033 foldmethod e manual):
+  AssertEqual 'manual', &foldmethod
+
+Execute (UT-034 foldlevel e 99):
+  AssertEqual 99, &foldlevel
+
+Execute (UT-035 updatetime e 300):
+  AssertEqual 300, &updatetime
+
+Execute (UT-036 signcolumn e yes):
+  AssertEqual 'yes', &signcolumn
+
+Execute (UT-037 clipboard contem unnamed):
+  Assert &clipboard =~# 'unnamed', 'clipboard nao contem unnamed: ' . &clipboard
+
+Execute (UT-038 mix_format_on_save e 1):
+  AssertEqual 1, g:mix_format_on_save
+
+Execute (UT-039 endwise_no_mappings e 1):
+  AssertEqual 1, g:endwise_no_mappings
+
+Execute (UT-040 AutoPairsShortcutToggle e Ctrl-p):
+  AssertEqual '<C-p>', g:AutoPairsShortcutToggle
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-041 a UT-047: vim-surround — pares customizados
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-041 surround d e do-end com newlines):
+  AssertEqual "do\n\r\nend", g:surround_100
+
+Execute (UT-042 surround e e fn inline):
+  AssertEqual "fn -> \r end", g:surround_101
+
+Execute (UT-043 surround E e fn multilinha):
+  AssertEqual "fn ->\n\r\nend", g:surround_69
+
+Execute (UT-044 surround n e defmodule):
+  AssertEqual "defmodule \r do\nend", g:surround_110
+
+Execute (UT-045 surround g e begin-end Ruby):
+  AssertEqual "begin\n\r\nend", g:surround_103
+
+Execute (UT-046 surround igual e ERB output):
+  AssertEqual "<%= \r %>", g:surround_61
+
+Execute (UT-047 surround porcento e ERB silencioso):
+  AssertEqual "<% \r %>", g:surround_37
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-048 a UT-050: vim-projectionist — heurísticas
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-048 projectionist mix.exs lib-ex alterna para test):
+  Assert has_key(g:projectionist_heuristics, 'mix.exs'),
+        \ 'chave mix.exs ausente em g:projectionist_heuristics'
+  Assert has_key(g:projectionist_heuristics['mix.exs'], 'lib/*.ex'),
+        \ 'chave lib/*.ex ausente em heuristics[mix.exs]'
+  AssertEqual 'test/{}_test.exs',
+        \ g:projectionist_heuristics['mix.exs']['lib/*.ex']['alternate']
+
+Execute (UT-049 projectionist mix.exs controller Phoenix presente):
+  Assert has_key(g:projectionist_heuristics['mix.exs'],
+        \ 'lib/*_web/controllers/*_controller.ex'),
+        \ 'heuristica de controller Phoenix ausente'
+
+Execute (UT-050 projectionist Gemfile model alterna para spec):
+  Assert has_key(g:projectionist_heuristics, 'Gemfile'),
+        \ 'chave Gemfile ausente em g:projectionist_heuristics'
+  AssertEqual 'spec/models/{}_spec.rb',
+        \ g:projectionist_heuristics['Gemfile']['app/models/*.rb']['alternate']
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-051 a UT-052: CoC — lista de extensões
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-051 coc_global_extensions contem todas as 21 extensoes):
+  let required = [
+        \ 'coc-elixir', 'coc-solargraph', 'coc-tsserver', 'coc-pyright',
+        \ 'coc-css', 'coc-tailwindcss', 'coc-eslint', 'coc-prettier',
+        \ 'coc-emmet', 'coc-snippets', 'coc-sql', 'coc-html',
+        \ 'coc-json', 'coc-yaml', 'coc-xml', 'coc-sh',
+        \ 'coc-git', 'coc-yank', 'coc-docker', 'coc-browser',
+        \ 'coc-markdownlint'
+        \ ]
+  for ext in required
+    Assert index(g:coc_global_extensions, ext) >= 0,
+          \ 'extensao ausente: ' . ext
+  endfor
+
+Execute (UT-052 coc_global_extensions sem extensoes descontinuadas):
+  let banned = ['coc-rome', 'coc-java', 'coc-texlab', 'coc-powershell']
+  for ext in banned
+    Assert index(g:coc_global_extensions, ext) < 0,
+          \ 'extensao banida presente: ' . ext
+  endfor
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-057 a UT-060: Configurações críticas de plugins
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-057 rooter_patterns contem mix.exs e Gemfile):
+  Assert index(g:rooter_patterns, 'mix.exs') >= 0,
+        \ 'mix.exs ausente em g:rooter_patterns'
+  Assert index(g:rooter_patterns, 'Gemfile') >= 0,
+        \ 'Gemfile ausente em g:rooter_patterns'
+
+Execute (UT-058 test strategy e vimux):
+  AssertEqual 'vimux', get(g:, 'test#strategy', get(g:, 'test_strategy', ''))
+
+Execute (UT-059 fzf_layout tem window com width e height):
+  Assert has_key(g:fzf_layout, 'window'),
+        \ 'g:fzf_layout nao tem chave window'
+  Assert g:fzf_layout['window']['width'] > 0,
+        \ 'fzf_layout.window.width deve ser > 0'
+  Assert g:fzf_layout['window']['height'] > 0,
+        \ 'fzf_layout.window.height deve ser > 0'
+
+Execute (UT-060 FZF_DEFAULT_COMMAND usa rg quando disponivel):
+  if executable('rg')
+    Assert $FZF_DEFAULT_COMMAND =~# 'rg',
+          \ 'rg disponivel mas FZF_DEFAULT_COMMAND nao usa rg: ' . $FZF_DEFAULT_COMMAND
+  endif

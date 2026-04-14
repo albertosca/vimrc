@@ -1,0 +1,156 @@
+" UT-001 a UT-016: s:SmartPair e s:SmartQuote
+" UT-053 a UT-054: s:ApplySmartOpenPairs
+"
+" Estratégia: obtém o SID do script my_configs.vim via :scriptnames
+" e usa function('<SNR>N_FuncName') para chamar as funções script-locais.
+
+" ─────────────────────────────────────────────────────────────────────────────
+" Setup global: SID do my_configs.vim (calculado uma vez)
+" ─────────────────────────────────────────────────────────────────────────────
+
+Before:
+  if !exists('g:configs_sid') || g:configs_sid == 0
+    let g:configs_sid = 0
+    for s:sline in split(execute('scriptnames'), "\n")
+      if s:sline =~# 'my_configs\.vim'
+        let g:configs_sid = str2nr(matchstr(s:sline, '^\s*\zs\d\+'))
+        break
+      endif
+    endfor
+  endif
+  Assert g:configs_sid > 0, 'my_configs.vim nao foi carregado (SID nao encontrado)'
+  let SmartPair  = function('<SNR>' . g:configs_sid . '_SmartPair')
+  let SmartQuote = function('<SNR>' . g:configs_sid . '_SmartQuote')
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-001 a UT-010: s:SmartPair(open, close)
+" Regra: retorna só `open` quando há \w À DIREITA do cursor;
+"        retorna `open . close . "<Left>"` caso contrário.
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-001 SmartPair nao fecha antes de letra minuscula):
+  new | call setline(1, 'foo') | call cursor(1, 1)
+  AssertEqual '(', SmartPair('(', ')')
+After:
+  bdelete!
+
+Execute (UT-002 SmartPair nao fecha antes de letra maiuscula):
+  new | call setline(1, 'Foo') | call cursor(1, 1)
+  AssertEqual '(', SmartPair('(', ')')
+After:
+  bdelete!
+
+Execute (UT-003 SmartPair nao fecha antes de digito):
+  new | call setline(1, '42') | call cursor(1, 1)
+  AssertEqual '[', SmartPair('[', ']')
+After:
+  bdelete!
+
+Execute (UT-004 SmartPair nao fecha antes de underscore):
+  new | call setline(1, '_var') | call cursor(1, 1)
+  AssertEqual '{', SmartPair('{', '}')
+After:
+  bdelete!
+
+Execute (UT-005 SmartPair fecha em linha vazia):
+  new | call setline(1, '') | call cursor(1, 1)
+  AssertEqual "()\<Left>", SmartPair('(', ')')
+After:
+  bdelete!
+
+Execute (UT-006 SmartPair fecha antes de espaco):
+  new | call setline(1, 'foo bar') | call cursor(1, 4)
+  " col 4 = o espaco entre foo e bar
+  AssertEqual "()\<Left>", SmartPair('(', ')')
+After:
+  bdelete!
+
+Execute (UT-007 SmartPair fecha antes de paren fechante):
+  new | call setline(1, ')') | call cursor(1, 1)
+  AssertEqual "()\<Left>", SmartPair('(', ')')
+After:
+  bdelete!
+
+Execute (UT-008 SmartPair funciona para par colchetes):
+  new | call setline(1, 'items') | call cursor(1, 1)
+  AssertEqual '[', SmartPair('[', ']')
+After:
+  bdelete!
+
+Execute (UT-009 SmartPair funciona para par chaves):
+  new | call setline(1, 'key') | call cursor(1, 1)
+  AssertEqual '{', SmartPair('{', '}')
+After:
+  bdelete!
+
+Execute (UT-010 SmartPair fecha chave em linha vazia):
+  new | call setline(1, '') | call cursor(1, 1)
+  AssertEqual "{}\<Left>", SmartPair('{', '}')
+After:
+  bdelete!
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-011 a UT-016: s:SmartQuote(char)
+" Regra: retorna char sozinho se \w à direita;
+"        retorna <Right> se mesmo char à direita (pula por cima);
+"        retorna char.char.<Left> caso contrário.
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-011 SmartQuote aspas duplas nao fecha antes de letra):
+  new | call setline(1, 'hello') | call cursor(1, 1)
+  AssertEqual '"', SmartQuote('"')
+After:
+  bdelete!
+
+Execute (UT-012 SmartQuote aspas duplas pula por cima de aspas existente):
+  new | call setline(1, '"') | call cursor(1, 1)
+  AssertEqual "\<Right>", SmartQuote('"')
+After:
+  bdelete!
+
+Execute (UT-013 SmartQuote aspas duplas fecha em linha vazia):
+  new | call setline(1, '') | call cursor(1, 1)
+  AssertEqual "\"\"\<Left>", SmartQuote('"')
+After:
+  bdelete!
+
+Execute (UT-014 SmartQuote aspas simples nao fecha antes de letra):
+  new | call setline(1, 'it') | call cursor(1, 1)
+  AssertEqual "'", SmartQuote("'")
+After:
+  bdelete!
+
+Execute (UT-015 SmartQuote backtick pula por cima de backtick existente):
+  new | call setline(1, '`') | call cursor(1, 1)
+  AssertEqual "\<Right>", SmartQuote('`')
+After:
+  bdelete!
+
+Execute (UT-016 SmartQuote backtick fecha antes de espaco):
+  new | call setline(1, ' ') | call cursor(1, 1)
+  AssertEqual "``\<Left>", SmartQuote('`')
+After:
+  bdelete!
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-053 a UT-054: s:ApplySmartOpenPairs
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-053 ApplySmartOpenPairs registra 6 inoremap buffer-local):
+  new
+  let ApplyFn = function('<SNR>' . g:configs_sid . '_ApplySmartOpenPairs')
+  call ApplyFn()
+  " Verifica que cada char tem mapeamento buffer-local em modo insert
+  for ch in ['(', '[', '{', '"', "'", '`']
+    let m = maparg(ch, 'i', 0, 1)
+    Assert get(m, 'buffer', 0) == 1,
+          \ 'inoremap buffer-local ausente para: ' . ch
+  endfor
+After:
+  bdelete!
+
+Execute (UT-054 SmartQuote aspas simples nao fecha antes de qualquer letra):
+  new | call setline(1, 'world') | call cursor(1, 1)
+  AssertEqual "'", SmartQuote("'")
+After:
+  bdelete!

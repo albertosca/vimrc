@@ -32,11 +32,17 @@ run_vader() {
     echo "  (nenhum arquivo em $glob — pulando)"
     return
   fi
-  vim -N -u ~/.vimrc \
+  local output exit_code
+  output=$(vim -N -u ~/.vimrc \
     --cmd "set rtp+=$VADER_RTP" \
     -c "Vader! $glob" \
-    -c "qa!" 2>&1 \
-    | grep -E "(^[[:space:]]*(✓|✗|PASS|FAIL|Error|E[0-9]+)|Success|Failure)" || true
+    -c "qa!" 2>&1) || exit_code=$?
+  echo "$output"
+  if echo "$output" | grep -qE "^(Failures|[0-9]+ failure)"; then
+    fail "$label vader"
+  elif [ "${exit_code:-0}" -ne 0 ]; then
+    fail "$label vader (exit $exit_code)"
+  fi
 }
 
 # ── Shell ──────────────────────────────────────────────────────────────────────

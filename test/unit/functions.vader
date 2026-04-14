@@ -1,0 +1,94 @@
+" UT-017 a UT-020: CheckBackspace()
+" UT-023 a UT-024: s:GitMessenger() — retornos antecipados
+" UT-055        : popup_list() vazio antes de GitMessenger
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-017 a UT-020: CheckBackspace()
+" Função global — testável diretamente sem SID.
+" Retorna 1 quando cursor na col 1 ou char à esquerda é whitespace.
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-017 CheckBackspace retorna 1 na coluna 1):
+  new | call setline(1, 'foo') | call cursor(1, 1)
+  AssertEqual 1, CheckBackspace()
+After:
+  bdelete!
+
+Execute (UT-018 CheckBackspace retorna 1 com espaco a esquerda):
+  new | call setline(1, '  foo') | call cursor(1, 3)
+  " col 3 = posição após os dois espaços; char à esquerda é espaço
+  AssertEqual 1, CheckBackspace()
+After:
+  bdelete!
+
+Execute (UT-019 CheckBackspace retorna 0 com letra a esquerda):
+  new | call setline(1, 'foo') | call cursor(1, 4)
+  " col 4 = fim de 'foo'; char à esquerda é 'o'
+  AssertEqual 0, CheckBackspace()
+After:
+  bdelete!
+
+Execute (UT-020 CheckBackspace retorna 0 com paren a esquerda):
+  new | call setline(1, 'foo(') | call cursor(1, 5)
+  AssertEqual 0, CheckBackspace()
+After:
+  bdelete!
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-023 a UT-024: s:GitMessenger() — retornos antecipados
+" Testa os guards iniciais sem precisar de mock de system().
+" ─────────────────────────────────────────────────────────────────────────────
+
+Before:
+  if !exists('g:configs_sid') || g:configs_sid == 0
+    let g:configs_sid = 0
+    for s:sline in split(execute('scriptnames'), "\n")
+      if s:sline =~# 'my_configs\.vim'
+        let g:configs_sid = str2nr(matchstr(s:sline, '^\s*\zs\d\+'))
+        break
+      endif
+    endfor
+  endif
+  Assert g:configs_sid > 0, 'my_configs.vim nao foi carregado'
+
+Execute (UT-023 GitMessenger retorna cedo em buffer sem arquivo):
+  new
+  " Buffer sem nome (expand('%') == '')
+  let GitMessenger = function('<SNR>' . g:configs_sid . '_GitMessenger')
+  " Não deve criar popups nem chamar system()
+  let before = len(popup_list())
+  call GitMessenger()
+  AssertEqual before, len(popup_list()),
+        \ 'GitMessenger criou popup em buffer sem nome — nao deveria'
+After:
+  bdelete!
+
+Execute (UT-024 GitMessenger retorna cedo com arquivo inexistente):
+  new
+  " Nomeia o buffer com path inexistente
+  silent! file /tmp/nao_existe_de_verdade_12345.ex
+  let GitMessenger = function('<SNR>' . g:configs_sid . '_GitMessenger')
+  let before = len(popup_list())
+  call GitMessenger()
+  AssertEqual before, len(popup_list()),
+        \ 'GitMessenger criou popup com arquivo inexistente — nao deveria'
+After:
+  bdelete!
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-055: popup_list() vazio antes de qualquer chamada a GitMessenger
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-055 popup_create e popup_close funcionam corretamente):
+  " Testa a API de popup sem depender de popup_clear (que nao fecha
+  " popups window-local criados pelo CoC).
+  let before = len(popup_list())
+  let test_id = popup_create('teste UT-055', {})
+  Assert test_id > 0, 'popup_create nao retornou ID valido'
+  AssertEqual before + 1, len(popup_list()),
+        \ 'popup nao apareceu em popup_list apos popup_create'
+  call popup_close(test_id)
+  AssertEqual before, len(popup_list()),
+        \ 'popup nao foi removido por popup_close'
+After:
+  silent! call popup_close(test_id)
