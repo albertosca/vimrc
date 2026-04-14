@@ -38,10 +38,6 @@ inoremap <C-S-h> :tabmove -1<cr>
 inoremap <C-S-l> :tabmove +1<cr>
 vnoremap <C-S-h> :tabmove -1<cr>
 vnoremap <C-S-l> :tabmove +1<cr>
-nnoremap <C-t> <Esc> :tabe<CR>
-inoremap <C-t> <Esc> :tabe<CR>
-vnoremap <C-t> <Esc> :tabnew<CR>
-
 "Multiple cursors net key
 let g:multi_cursor_next_key="<C-n>"
 
@@ -69,11 +65,17 @@ set sidescroll=1
 set hlsearch!
 nnoremap <F3> :set hlsearch!<CR>
 
+" MRU: remap para ,fr (,f foi tomado pelo CoC Format)
+map <leader>fr :MRU<CR>
+
+" Copy current filename (,cs) and full path (,cl) to clipboard
+nnoremap <silent> <leader>cs :let @+=expand("%:t")<CR>:echo 'Copied: ' . expand('%:t')<CR>
+nnoremap <silent> <leader>cl :let @+=expand("%:p")<CR>:echo 'Copied: ' . expand('%:p')<CR>
+
 " =============================================================================
 " Ruby & Rails Configuration
 " =============================================================================
-" Navigation handled by vim-rails (use :A, :Rmodel, :Rcontroller)
-let g:ruby_host_prog = 'ruby' " Ensure ruby is in path
+let g:ruby_host_prog = 'ruby'
 
 " Vim test for Ruby
 let test#ruby#rspec#executable = 'bundle exec rspec'
@@ -83,19 +85,27 @@ let test#ruby#rspec#executable = 'bundle exec rspec'
 " =============================================================================
 " coc-tsserver handles JS/TS/JSX/TSX
 " coc-emmet for fast HTML/JSX expansions
-autocmd FileType html,css,javascriptreact,typescriptreact emmet+
 
-" Ensure JSX is recognized in .js files
+" Ensure JSX/TSX filetypes are recognized
 autocmd BufNewFile,BufRead *.jsx set filetype=javascriptreact
 autocmd BufNewFile,BufRead *.tsx set filetype=typescriptreact
 
 " =============================================================================
-" Database Configuration (SQL)
+" Database Configuration (vim-dadbod)
 " =============================================================================
-" Use vim-dadbod to run queries (SQL results in a split)
-" Usage: :DB g:my_db_url SELECT * FROM users LIMIT 10
-" URLs: postgres://user:pass@localhost:5432/db_name
-"       mysql://user:pass@localhost:3306/db_name
+" Toggle DB UI explorer
+nnoremap <silent> <leader>db :DBUIToggle<CR>
+nnoremap <silent> <leader>dba :DBUIAddConnection<CR>
+nnoremap <silent> <leader>dbf :DBUIFindBuffer<CR>
+nnoremap <silent> <leader>dbr :DBUIRenameBuffer<CR>
+
+" Save queries automatically
+let g:db_ui_save_location = '~/.vim_runtime/db_queries'
+let g:db_ui_use_nerd_fonts = 1
+let g:db_ui_show_database_icon = 1
+
+" dadbod-completion: enable in SQL and dadbod buffers
+autocmd FileType sql,mysql,plsql call coc#config('suggest.autoTrigger', 'always')
 
 " =============================================================================
 " Elixir Configuration
@@ -128,15 +138,55 @@ nmap <Leader>ie :call VimuxRunCommand("iex -S mix")<CR>
 let g:projectionist_heuristics = {
       \ "mix.exs": {
       \   "lib/*.ex": {"alternate": "test/{}_test.exs", "type": "source"},
-      \   "test/*_test.exs": {"alternate": "lib/{}.ex", "type": "test"}
+      \   "test/*_test.exs": {"alternate": "lib/{}.ex", "type": "test"},
+      \   "lib/*_web/controllers/*_controller.ex": {"alternate": "test/{}_web/controllers/{}_controller_test.exs", "type": "controller"},
+      \   "lib/*_web/live/*_live.ex": {"alternate": "test/{}_web/live/{}_live_test.exs", "type": "live"}
+      \ },
+      \ "Gemfile": {
+      \   "app/models/*.rb": {"alternate": "spec/models/{}_spec.rb", "type": "model"},
+      \   "app/controllers/*.rb": {"alternate": "spec/controllers/{}_spec.rb", "type": "controller"},
+      \   "app/helpers/*.rb": {"alternate": "spec/helpers/{}_spec.rb", "type": "helper"}
       \ }}
 
 " Elixir: Surround mappings for 'do ... end'
 " Usage: 'ysiw d' to wrap a word in do/end
-let g:surround_100 = "do\r\nend"
+" =============================================================================
+" vim-surround: pares customizados (visual: S<char> | normal: ysiw<char>)
+" Chars reservados pelo plugin: b()  B{}  r[]  a<>  f/F função  t/T tag  s p :
+" =============================================================================
 
-" Auto-format Elixir files using CoC or mix format
+" d → do/end  (Elixir e Ruby — bloco com newlines)
+let g:surround_100 = "do\n\r\nend"
+
+" e → fn → end  (Elixir — função anônima inline)
+let g:surround_101 = "fn -> \r end"
+
+" E → fn → end  (Elixir — função anônima multilinha)
+let g:surround_69  = "fn ->\n\r\nend"
+
+" n → defmodule/do/end  (Elixir — novo módulo)
+let g:surround_110 = "defmodule \r do\nend"
+
+" g → begin/end  (Ruby — bloco de rescue/error handling)
+let g:surround_103 = "begin\n\r\nend"
+
+" = → <%= %>  (Rails ERB — tag de output)
+let g:surround_61  = "<%= \r %>"
+
+" % → <% %>  (Rails ERB — tag silenciosa)
+let g:surround_37  = "<% \r %>"
+
+" Auto-format Elixir files on save via mix format
 autocmd BufWritePre *.ex,*.exs,*.heex silent! call CocAction('format')
+
+" =============================================================================
+" Test Runner (vim-test)
+" =============================================================================
+nmap <silent> <leader>tn :TestNearest<CR>
+nmap <silent> <leader>tf :TestFile<CR>
+nmap <silent> <leader>ts :TestSuite<CR>
+nmap <silent> <leader>tl :TestLast<CR>
+nmap <silent> <leader>tv :TestVisit<CR>
 
 " =============================================================================
 " Pretty fonts and icons
@@ -157,10 +207,30 @@ let g:syntastic_javascript_checkers = []
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 
+" =============================================================================
+" CoC (Conquer of Completion) Configuration
+" =============================================================================
 " Better performance for CoC
 set updatetime=300
 set shortmess+=c
 set signcolumn=yes
+
+" Tab/Enter for completion selection
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+      \ : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Ctrl+Space to trigger completion manually
+inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call ShowDocumentation()<CR>
@@ -192,25 +262,22 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 " Add `:OR` command for organize imports of the current buffer.
 command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
 
-" Remap <C-f> and <C-b> for scroll float windows/popups.
+" CoC float scroll — apenas insert/visual (<C-f>/<C-b> no normal mode vai pro fzf)
 if has('patch-8.2.0750')
-  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
   inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
   inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
   vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
   vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 endif
 
-
 " Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Mappings for CoCList
-" Show all diagnostics.
 nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+
+" CoC references (,gr — gr sozinho mantém tabprev)
+nmap <leader>gr <Plug>(coc-references)
 
 " Jump to definition with Ctrl+] (LSP aware)
 nmap <silent> <C-]> <Plug>(coc-definition)
@@ -218,11 +285,25 @@ nmap <silent> <C-]> <Plug>(coc-definition)
 " Jump back with Ctrl+t (Reverse jump)
 nmap <silent> <C-t> <C-o>
 
+" LSP navigation: gd=definition  gy=type  gi=implementation
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+
+" Code actions: ,a (cursor) e visual ,a (selection)
+nmap <leader>a  <Plug>(coc-codeaction-cursor)
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Navegar entre diagnósticos: [g (anterior) e ]g (próximo)
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
 " macOS specific shortcuts (Cmd+] and Cmd+[)
 if has("mac") || has("macunix")
   nmap <silent> <D-]> <Plug>(coc-definition)
   nmap <silent> <D-[> <C-o>
 endif
+
 " Manage extensions.
 nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
 " Show commands.
@@ -237,15 +318,181 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-" Endwise
-" disable mapping to not break coc.nvim (I don't even use them anyways)
+
+" coc-snippets: expand and jump
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+
+" Endwise: disable default mapping (coc handles insert-mode <CR>)
 let g:endwise_no_mappings = 1
 
-let g:coc_global_extensions = ['coc-json', 'coc-git', 'coc-css', 'coc-browser', 'coc-docker', 'coc-elixir', 'coc-eslint', 'coc-html', 'coc-java', 'coc-markdownlint', 'coc-prettier', 'coc-sh', 'coc-texlab', 'coc-yaml', 'coc-yank', 'coc-xml', 'coc-rome', 'coc-powershell', 'coc-solargraph', 'coc-emmet', 'coc-sql']
+let g:coc_global_extensions = [
+      \ 'coc-json',
+      \ 'coc-git',
+      \ 'coc-css',
+      \ 'coc-browser',
+      \ 'coc-docker',
+      \ 'coc-elixir',
+      \ 'coc-eslint',
+      \ 'coc-html',
+      \ 'coc-markdownlint',
+      \ 'coc-prettier',
+      \ 'coc-sh',
+      \ 'coc-yaml',
+      \ 'coc-yank',
+      \ 'coc-xml',
+      \ 'coc-solargraph',
+      \ 'coc-emmet',
+      \ 'coc-sql',
+      \ 'coc-tsserver',
+      \ 'coc-pyright',
+      \ 'coc-snippets',
+      \ 'coc-tailwindcss'
+      \ ]
 
-" Auto-pairs: Disable auto-pairing if the next character is a word character
-" This prevents '(' becoming '()' when typed right before a word
-let g:AutoPairsNextClosedPair = ''
-let g:AutoPairsShortcutToggle = '<C-p>' " Allow toggling with Ctrl+p
+" =============================================================================
+" Smart Open Pairs — não fecha quando há \w À DIREITA do cursor
+" auto-pairs continua gerenciando: backspace, jump-over, espaço, Alt+e
+" Estratégia: sobrescrever só os chars de abertura com <buffer>, disparando
+" via InsertEnter DEPOIS do auto-pairs (que registrou o autocmd antes)
+" =============================================================================
+let g:AutoPairsShortcutToggle = '<C-p>'
 
-let b:coc_suggest_disable = 1
+function! s:SmartPair(open, close) abort
+  let next = getline('.')[col('.')-1]
+  return next =~# '\w' ? a:open : a:open . a:close . "\<Left>"
+endfunction
+
+function! s:SmartQuote(char) abort
+  let next = getline('.')[col('.')-1]
+  if next =~# '\w'       | return a:char
+  elseif next ==# a:char | return "\<Right>"
+  else                   | return a:char . a:char . "\<Left>"
+  endif
+endfunction
+
+function! s:ApplySmartOpenPairs() abort
+  inoremap <buffer> <expr> (  <SID>SmartPair('(', ')')
+  inoremap <buffer> <expr> [  <SID>SmartPair('[', ']')
+  inoremap <buffer> <expr> {  <SID>SmartPair('{', '}')
+  inoremap <buffer> <expr> "  <SID>SmartQuote('"')
+  inoremap <buffer> <expr> '  <SID>SmartQuote("'")
+  inoremap <buffer> <expr> `  <SID>SmartQuote('`')
+endfunction
+
+augroup SmartOpenPairs
+  autocmd!
+  autocmd VimEnter,BufEnter,InsertEnter * call s:ApplySmartOpenPairs()
+augroup end
+
+" =============================================================================
+" fzf — Busca rápida de arquivos, buffers, texto (substitui CtrlP)
+" =============================================================================
+" Janela popup centralizada
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+let g:fzf_preview_window = ['right:50%', 'ctrl-/']
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+
+" ripgrep como backend de listagem de arquivos
+if executable('rg')
+  let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*" --glob "!node_modules/*" --glob "!_build/*" --glob "!deps/*" --glob "!.elixir_ls/*"'
+endif
+
+nnoremap <C-f>       :Files<CR>
+nnoremap <C-b>       :Buffers<CR>
+nnoremap <leader>gf  :GFiles<CR>
+nnoremap <leader>rg  :Rg<space>
+nnoremap <leader>bl  :BLines<CR>
+nnoremap <leader>ht  :History<CR>
+
+" =============================================================================
+" vim-projectionist — Alternância código<=>teste (:A) em Elixir e outros
+" =============================================================================
+" (g:projectionist_heuristics já definido na seção Elixir acima)
+
+" =============================================================================
+" vim-unimpaired — Navegação rápida de quickfix, location list, buffers
+" =============================================================================
+" [q / ]q  → quickfix anterior/próximo
+" [l / ]l  → location list anterior/próximo
+" [b / ]b  → buffer anterior/próximo
+" [n / ]n  → conflito de merge anterior/próximo
+" (sem configuração necessária — o plugin define tudo)
+
+" =============================================================================
+" Undotree — Histórico visual de undo
+" =============================================================================
+nnoremap <leader>u :UndotreeToggle<CR>
+let g:undotree_WindowLayout = 2
+let g:undotree_SetFocusWhenToggle = 1
+
+" =============================================================================
+" vim-obsession — Gerenciamento de sessões
+" =============================================================================
+" ,os → inicia/para tracking da sessão (salva Session.vim no CWD)
+nnoremap <leader>os :Obsession<CR>
+
+" Restaura sessão automaticamente se Session.vim existir no diretório atual
+augroup obsession_restore
+  autocmd!
+  autocmd VimEnter * nested
+        \ if !argc() && empty(v:this_session) && filereadable('Session.vim') |
+        \   source Session.vim |
+        \ endif
+augroup end
+
+" =============================================================================
+" vim-rooter — CD automático para a raiz do projeto
+" =============================================================================
+let g:rooter_patterns = ['.git', 'mix.exs', 'Gemfile', 'package.json',
+      \ 'pyproject.toml', 'setup.py', '.python-version', 'Cargo.toml']
+let g:rooter_silent_chdir = 1
+let g:rooter_resolve_links = 1
+
+" =============================================================================
+" GV.vim — Browser de git log
+" =============================================================================
+nnoremap <leader>gv :GV<CR>
+nnoremap <leader>gV :GV!<CR>
+
+" =============================================================================
+" Git Messenger — popup com commit/autor da linha atual (,gm)
+" =============================================================================
+function! s:GitMessenger() abort
+  let l:line = line('.')
+  let l:file = expand('%')
+  if empty(l:file) || !filereadable(l:file)
+    return
+  endif
+  let l:blame = system(printf(
+        \ 'git blame -L %d,%d --porcelain %s 2>/dev/null',
+        \ l:line, l:line, shellescape(l:file)))
+  if v:shell_error
+    echo 'Não é um repositório git'
+    return
+  endif
+  let l:hash = matchstr(l:blame, '^[0-9a-f]\+')
+  if l:hash =~# '^0\+$'
+    echo 'Linha ainda não commitada'
+    return
+  endif
+  let l:msg = system(printf(
+        \ 'git log -1 --format="%%h %%s%%n%%nAuthor: %%an <%%ae>%%nDate:   %%ad%%n%%n%%b" %s 2>/dev/null',
+        \ l:hash))
+  if has('popupwin')
+    call popup_atcursor(split(l:msg, "\n"),
+          \ {'border': [1,1,1,1], 'padding': [0,1,0,1], 'moved': 'any'})
+  else
+    echo l:msg
+  endif
+endfunction
+nmap <silent> <leader>gm :call <SID>GitMessenger()<CR>
+
+" =============================================================================
+" Auto-save e trailing whitespace extra
+" =============================================================================
+" Salva todos os buffers ao perder o foco (saiu da janela/app)
+autocmd FocusLost * silent! wa
+
+" Extend trailing whitespace removal para Elixir, Ruby, TS, CSS
+autocmd BufWritePre *.ex,*.exs,*.heex,*.rb,*.rake,*.erb,*.ts,*.tsx,*.css,*.scss
+      \ call CleanExtraSpaces()

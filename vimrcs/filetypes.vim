@@ -1,4 +1,24 @@
 """"""""""""""""""""""""""""""
+" => Ruby / Rails section
+""""""""""""""""""""""""""""""
+au BufNewFile,BufRead *.rb,*.rake,Gemfile,Rakefile,Guardfile,Capfile set filetype=ruby
+au BufNewFile,BufRead *.erb set filetype=eruby
+
+au FileType ruby setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab
+au FileType eruby setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab
+
+
+""""""""""""""""""""""""""""""
+" => Elixir / Phoenix section
+""""""""""""""""""""""""""""""
+au BufNewFile,BufRead *.heex set filetype=heex
+au BufNewFile,BufRead *.leex set filetype=eelixir
+au BufNewFile,BufRead *.ex,*.exs set filetype=elixir
+
+au FileType elixir,heex,eelixir setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab
+
+
+""""""""""""""""""""""""""""""
 " => Python section
 """"""""""""""""""""""""""""""
 let python_highlight_all = 1
