@@ -2,6 +2,12 @@
 # ignore = dirty: oculta modified/untracked dentro do plugin em git status,
 # mas ainda mostra quando update_my_plugins.sh traz commits novos.
 
+# Dependência de teste
+[submodule "test/vendor/vader.vim"]
+	path = test/vendor/vader.vim
+	url = https://github.com/junegunn/vader.vim
+	ignore = dirty
+
 [submodule "my_plugins/coc.nvim"]
 	path = my_plugins/coc.nvim
 	url = https://github.com/neoclide/coc.nvim
