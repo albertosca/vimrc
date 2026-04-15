@@ -13,3 +13,5 @@ erl_crash.dump
 **/erl_crash.dump
 # Diretório de isolamento XDG usado pelos testes
 test/xdg/
+# Dependências Node.js dos testes Jest
+test/node/node_modules/
