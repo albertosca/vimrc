@@ -1,0 +1,96 @@
+" E2E-009 a E2E-016: vim-surround — wrapping visual e operações de troca/remoção
+"
+" Estratégia: feedkeys("...", 'tx') com flag 't' para ir pelos xmap/nmap
+" do vim-surround (S em visual, cs/ds/ys em normal).
+
+Before:
+  silent! highlight CocPumVirtualText ctermfg=0
+
+" ─────────────────────────────────────────────────────────────────────────────
+" E2E-009 a E2E-011: Visual line + S → templates multilinhas
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (E2E-009 VS d envolve linha em do-end):
+  new
+  " Desativa autoindent para que 'end' nao receba indentacao automatica
+  setlocal noautoindent nosmartindent indentexpr=
+  call setline(1, 'some_call()')
+  call cursor(1, 1)
+  call feedkeys("VSd", 'tx')
+Expect:
+  do
+  some_call()
+  end
+After:
+  bdelete!
+
+Execute (E2E-011 VS E envolve linha em fn multilinha):
+  new
+  call setline(1, 'body')
+  call cursor(1, 1)
+  call feedkeys("VSE", 'tx')
+Expect:
+  fn ->
+  body
+  end
+After:
+  bdelete!
+
+" ─────────────────────────────────────────────────────────────────────────────
+" E2E-012 a E2E-013: Visual line + S → templates inline (ERB)
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (E2E-012 v dolar S igual envolve em tag ERB output):
+  new
+  call setline(1, 'user.name')
+  call cursor(1, 1)
+  " v$ = visual character até fim da linha; S= = surround inline
+  call feedkeys("v\$S=", 'tx')
+  AssertEqual '<%= user.name %>', getline(1)
+After:
+  bdelete!
+
+Execute (E2E-013 v dolar S porcento envolve em tag ERB silenciosa):
+  new
+  call setline(1, 'render partial')
+  call cursor(1, 1)
+  call feedkeys("v\$S%", 'tx')
+  AssertEqual '<% render partial %>', getline(1)
+After:
+  bdelete!
+
+" ─────────────────────────────────────────────────────────────────────────────
+" E2E-010: v $ S e → fn inline (template sem \n — visual character mode)
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (E2E-010 v dolar S e envolve linha em fn inline):
+  new
+  call setline(1, 'expression')
+  call cursor(1, 1)
+  " v$ = visual character até fim da linha; Se = surround com 'e' (fn inline)
+  call feedkeys("v\$Se", 'tx')
+  AssertEqual 'fn -> expression end', getline(1)
+After:
+  bdelete!
+
+" ─────────────────────────────────────────────────────────────────────────────
+" E2E-015 a E2E-016: Normal mode surround (cs / ds)
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (E2E-015 cs troca aspas duplas por simples):
+  new
+  call setline(1, '"hello"')
+  call cursor(1, 1)
+  call feedkeys("cs\"'", 'tx')
+  AssertEqual "'hello'", getline(1)
+After:
+  bdelete!
+
+Execute (E2E-016 ds remove aspas duplas):
+  new
+  call setline(1, '"hello"')
+  call cursor(1, 1)
+  call feedkeys('ds"', 'tx')
+  AssertEqual 'hello', getline(1)
+After:
+  bdelete!

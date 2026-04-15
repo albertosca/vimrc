@@ -1,0 +1,80 @@
+name: Vim Config Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────────────────────
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      # ── 2. Instalar Vim ───────────────────────────────────────────────────────
+      - name: Install Vim
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y vim ripgrep git
+
+      # ── 3. Configurar ~/.vimrc e caminhos ─────────────────────────────────────
+      - name: Setup Vim config
+        run: |
+          REPO="$GITHUB_WORKSPACE"
+
+          # Cria symlink ~/vim_runtime → repo para que os paths internos funcionem
+          ln -sf "$REPO" "$HOME/.vim_runtime"
+
+          # Cria ~/.vimrc apontando para o repo (espelha o vimrc do usuário)
+          cat > "$HOME/.vimrc" <<'EOF'
+          source ~/.vim_runtime/autoload/pathogen.vim
+          if exists('*pathogen#infect')
+            call pathogen#infect('~/.vim_runtime/my_plugins/{}')
+            silent! call pathogen#helptags()
+          endif
+          source ~/.vim_runtime/vimrcs/basic.vim
+          source ~/.vim_runtime/vimrcs/filetypes.vim
+          source ~/.vim_runtime/vimrcs/plugins_config.vim
+          source ~/.vim_runtime/vimrcs/extended.vim
+          source ~/.vim_runtime/my_configs.vim
+          EOF
+
+          # Cria ~/.vim e coc-settings.json mínimo para os testes Jest
+          mkdir -p "$HOME/.vim"
+          if [ ! -f "$HOME/.vim/coc-settings.json" ]; then
+            cp "$REPO/test/fixtures/coc-settings.json" "$HOME/.vim/coc-settings.json" 2>/dev/null || \
+            echo '{}' > "$HOME/.vim/coc-settings.json"
+          fi
+
+      # ── 4. Node.js e Jest ─────────────────────────────────────────────────────
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Jest dependencies
+        run: cd test/node && npm ci
+
+      # ── 5. Testes ─────────────────────────────────────────────────────────────
+      - name: Unit tests (vader)
+        run: bash test/run.sh unit
+
+      - name: Integration tests (vader)
+        run: bash test/run.sh integration
+
+      - name: E2E tests (vader)
+        run: bash test/run.sh e2e
+
+      - name: JSON tests (Jest)
+        run: bash test/run.sh json
+
+      # Shell tests verificam deps do sistema (ElixirLS, ruby, etc.)
+      # Em CI algumas delas falham por design — roda como informativo.
+      - name: Shell tests (informativo)
+        run: bash test/run.sh shell || true

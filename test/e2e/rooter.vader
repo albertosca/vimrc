@@ -1,0 +1,60 @@
+" E2E-046 a E2E-048: vim-rooter — mudança automática de CWD para raiz do projeto
+"
+" Estratégia: abre arquivo dentro de um fixture de projeto, verifica que
+" getcwd() aponta para o diretório com o arquivo marcador (mix.exs, Gemfile,
+" package.json). vim-rooter dispara via BufEnter de forma síncrona.
+
+" ─────────────────────────────────────────────────────────────────────────────
+" Setup: raiz do repo (para restaurar CWD após cada teste)
+" ─────────────────────────────────────────────────────────────────────────────
+
+Before:
+  let g:e2e_repo_root = expand('~/.vim_runtime')
+
+" ─────────────────────────────────────────────────────────────────────────────
+" E2E-046: Projeto Elixir — mix.exs como marcador de raiz
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (E2E-046 rooter detecta mix.exs como raiz de projeto Elixir):
+  let target   = g:e2e_repo_root . '/test/fixtures/elixir_project/lib/app.ex'
+  let expected = g:e2e_repo_root . '/test/fixtures/elixir_project'
+  execute 'edit ' . fnameescape(target)
+  let cwd = fnamemodify(getcwd(), ':p')
+  let exp = fnamemodify(expected, ':p')
+  AssertEqual exp, cwd,
+        \ 'rooter nao mudou para raiz Elixir: ' . cwd
+After:
+  bdelete!
+  execute 'cd ' . fnameescape(g:e2e_repo_root)
+
+" ─────────────────────────────────────────────────────────────────────────────
+" E2E-047: Projeto Rails — Gemfile como marcador de raiz
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (E2E-047 rooter detecta Gemfile como raiz de projeto Rails):
+  let target   = g:e2e_repo_root . '/test/fixtures/rails_project/app/models/user.rb'
+  let expected = g:e2e_repo_root . '/test/fixtures/rails_project'
+  execute 'edit ' . fnameescape(target)
+  let cwd = fnamemodify(getcwd(), ':p')
+  let exp = fnamemodify(expected, ':p')
+  AssertEqual exp, cwd,
+        \ 'rooter nao mudou para raiz Rails: ' . cwd
+After:
+  bdelete!
+  execute 'cd ' . fnameescape(g:e2e_repo_root)
+
+" ─────────────────────────────────────────────────────────────────────────────
+" E2E-048: Projeto Node — package.json como marcador de raiz
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (E2E-048 rooter detecta package.json como raiz de projeto Node):
+  let target   = g:e2e_repo_root . '/test/fixtures/node_project/src/app.js'
+  let expected = g:e2e_repo_root . '/test/fixtures/node_project'
+  execute 'edit ' . fnameescape(target)
+  let cwd = fnamemodify(getcwd(), ':p')
+  let exp = fnamemodify(expected, ':p')
+  AssertEqual exp, cwd,
+        \ 'rooter nao mudou para raiz Node: ' . cwd
+After:
+  bdelete!
+  execute 'cd ' . fnameescape(g:e2e_repo_root)

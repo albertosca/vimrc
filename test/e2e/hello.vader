@@ -1,0 +1,14 @@
+" E2E-HW: Hello world — valida que feedkeys funciona no ambiente e2e
+
+Before:
+  " CoC define CocPumVirtualText lazily; em headless pode faltar.
+  " Definimos aqui para evitar E970 ao entrar em insert mode.
+  silent! highlight CocPumVirtualText ctermfg=0
+
+Execute (E2E-HW feedkeys insere texto no buffer):
+  new
+  call feedkeys("ihello world\<Esc>", 'tx')
+Expect:
+  hello world
+After:
+  bdelete!

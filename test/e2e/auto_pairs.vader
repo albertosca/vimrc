@@ -1,0 +1,104 @@
+" E2E-001 a E2E-008: Smart Auto-Pairs — comportamento interativo
+"
+" Estratégia: feedkeys("i{char}\<Esc>", 'tx') simula digitação real em
+" insert mode. A flag 't' vai pelo mapeamento inoremap buffer-local
+" registrado por ApplySmartOpenPairs via BufEnter/InsertEnter.
+"
+" Nota: CocPumVirtualText pode não estar definido em headless — definimos
+" no Before para evitar E970 ao entrar em insert mode.
+
+Before:
+  silent! highlight CocPumVirtualText ctermfg=0
+
+" ─────────────────────────────────────────────────────────────────────────────
+" E2E-001 a E2E-005: SmartPair — NÃO fecha antes de \w
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (E2E-001 abre paren antes de palavra nao fecha):
+  new
+  call setline(1, 'foo')
+  call cursor(1, 1)
+  call feedkeys("i(\<Esc>", 'tx')
+Expect:
+  (foo
+After:
+  bdelete!
+
+Execute (E2E-002 abre paren em linha vazia fecha automaticamente):
+  new
+  call feedkeys("i(\<Esc>", 'tx')
+Expect:
+  ()
+After:
+  bdelete!
+
+Execute (E2E-003 abre colchete antes de palavra nao fecha):
+  new
+  call setline(1, 'items')
+  call cursor(1, 1)
+  call feedkeys("i[\<Esc>", 'tx')
+Expect:
+  [items
+After:
+  bdelete!
+
+Execute (E2E-004 abre chave antes de texto nao fecha):
+  new
+  call setline(1, 'key: value')
+  call cursor(1, 1)
+  call feedkeys("i{\<Esc>", 'tx')
+Expect:
+  {key: value
+After:
+  bdelete!
+
+Execute (E2E-005 aspas duplas antes de palavra nao fecha):
+  new
+  call setline(1, 'hello')
+  call cursor(1, 1)
+  call feedkeys("i\"\<Esc>", 'tx')
+Expect:
+  "hello
+After:
+  bdelete!
+
+" ─────────────────────────────────────────────────────────────────────────────
+" E2E-006: SmartQuote — pula por cima de aspas existente
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (E2E-006 aspas duplas pula sobre aspas existente a direita):
+  new
+  call setline(1, '"')
+  call cursor(1, 1)
+  " Cursor em col 1 (sobre '"'); startinsert insere ANTES do '"'.
+  " SmartQuote vê '"' à direita → retorna \<Right> → buffer não muda.
+  call feedkeys("i\"\<Esc>", 'tx')
+  AssertEqual '"', getline(1)
+After:
+  bdelete!
+
+" ─────────────────────────────────────────────────────────────────────────────
+" E2E-007: auto-pairs <BS> apaga o par inteiro
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (E2E-007 backspace dentro de par apaga ambos):
+  new
+  call setline(1, '()')
+  " col 2 = cursor sobre ')'; 'i' insere ANTES de ')' = entre '(' e ')'
+  call cursor(1, 2)
+  call feedkeys("i\<BS>\<Esc>", 'tx')
+  AssertEqual '', getline(1)
+After:
+  bdelete!
+
+" ─────────────────────────────────────────────────────────────────────────────
+" E2E-008: digitação normal não é afetada pelos smart pairs
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (E2E-008 digitacao normal nao e interferida):
+  new
+  call feedkeys("idef foo\<Esc>", 'tx')
+Expect:
+  def foo
+After:
+  bdelete!
