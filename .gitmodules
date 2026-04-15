@@ -138,7 +138,3 @@
 	url = https://github.com/preservim/vimux
 	ignore = dirty
 
-[submodule "vimux"]
-	path = vimux
-	url = https://github.com/preservim/vimux
-	ignore = dirty
