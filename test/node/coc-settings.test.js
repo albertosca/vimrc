@@ -1,5 +1,5 @@
 /**
- * IT-021 a IT-026, IT-085: Validação de coc-settings.json
+ * IT-021 a IT-026, IT-085, IT-026b: Validação de coc-settings.json
  */
 
 const fs   = require('fs');
@@ -102,18 +102,26 @@ describe('IT-025: emmet.includeLanguages', () => {
   });
 });
 
-// IT-026 — chaves depreciadas ausentes
-describe('IT-026: ausência de chaves depreciadas', () => {
-  test('python.pythonPath não deve estar presente (depreciado)', () => {
-    if (Object.prototype.hasOwnProperty.call(settings, 'python.pythonPath')) {
-      // Marca como warning sem falhar hard — alinha com a spec do test_plan
-      console.warn(
-        'WARN IT-026: python.pythonPath está presente (depreciado).' +
-        ' Use python.defaultInterpreterPath.'
-      );
-    }
-    // Não falha — spec diz "warning se presente"
-    expect(true).toBe(true);
+// IT-026 — python.pythonPath ausente (depreciado desde CoC 0.0.80+)
+describe('IT-026: python.pythonPath ausente (depreciado)', () => {
+  test('python.pythonPath NÃO deve estar presente', () => {
+    // Chave depreciada — causa aviso do CoC ao iniciar. Bug detectado em 2026-04-15.
+    expect(
+      Object.prototype.hasOwnProperty.call(settings, 'python.pythonPath')
+    ).toBe(false);
+  });
+});
+
+// IT-026b — substituto correto presente
+describe('IT-026b: python.defaultInterpreterPath presente (substituto correto)', () => {
+  test('python.defaultInterpreterPath deve estar definido', () => {
+    expect(settings['python.defaultInterpreterPath']).toBeDefined();
+  });
+
+  test('valor aponta para um interpretador python', () => {
+    const val = settings['python.defaultInterpreterPath'];
+    expect(typeof val).toBe('string');
+    expect(val.length).toBeGreaterThan(0);
   });
 });
 

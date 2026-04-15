@@ -32,7 +32,7 @@
   "pyright.inlayHints.functionReturnTypes": false,
   "pyright.inlayHints.variableTypes": false,
   "pyright.inlayHints.parameterTypes": false,
-  "python.pythonPath": "python3",
+  "python.defaultInterpreterPath": "python3",
   "python.analysis.typeCheckingMode": "basic",
   "python.analysis.autoImportCompletions": true,
 
