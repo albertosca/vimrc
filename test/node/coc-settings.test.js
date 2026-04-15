@@ -1,0 +1,129 @@
+/**
+ * IT-021 a IT-026, IT-085: Validação de coc-settings.json
+ */
+
+const fs   = require('fs');
+const path = require('path');
+const os   = require('os');
+
+// Resolve o caminho, expandindo ~ manualmente (Node não expande ~ nativamente)
+function expandHome(p) {
+  return p.startsWith('~') ? path.join(os.homedir(), p.slice(1)) : p;
+}
+
+const COC_SETTINGS_PATH = expandHome('~/.vim/coc-settings.json');
+
+let settings;
+
+// IT-021 — JSON válido
+describe('IT-021: coc-settings.json é JSON válido', () => {
+  test('arquivo existe', () => {
+    expect(fs.existsSync(COC_SETTINGS_PATH)).toBe(true);
+  });
+
+  test('parse sem erros', () => {
+    const raw = fs.readFileSync(COC_SETTINGS_PATH, 'utf8');
+    expect(() => {
+      settings = JSON.parse(raw);
+    }).not.toThrow();
+  });
+});
+
+// Garante que settings está carregado para os testes seguintes
+beforeAll(() => {
+  const raw = fs.readFileSync(COC_SETTINGS_PATH, 'utf8');
+  settings = JSON.parse(raw);
+});
+
+// IT-022 — eslint.autoFixOnSave é boolean true
+describe('IT-022: eslint.autoFixOnSave', () => {
+  test('é boolean (não string)', () => {
+    expect(typeof settings['eslint.autoFixOnSave']).toBe('boolean');
+  });
+
+  test('é true', () => {
+    expect(settings['eslint.autoFixOnSave']).toBe(true);
+  });
+});
+
+// IT-023 — elixir.pathToElixirLS aponta para arquivo existente
+// Nota: toHaveProperty interpreta pontos como caminho aninhado — usar acesso direto
+describe('IT-023: elixir.pathToElixirLS', () => {
+  test('chave presente no JSON', () => {
+    expect(settings['elixir.pathToElixirLS']).toBeDefined();
+  });
+
+  test('caminho expandido existe no sistema', () => {
+    const raw = settings['elixir.pathToElixirLS'];
+    const resolved = expandHome(raw);
+    expect(fs.existsSync(resolved)).toBe(true);
+  });
+});
+
+// IT-024 — tailwindCSS.includeLanguages cobre heex e eruby
+describe('IT-024: tailwindCSS.includeLanguages', () => {
+  let langs;
+
+  beforeAll(() => {
+    langs = settings['tailwindCSS.includeLanguages'] || {};
+  });
+
+  test('chave presente no JSON', () => {
+    expect(settings['tailwindCSS.includeLanguages']).toBeDefined();
+  });
+
+  test('heex mapeado para "html"', () => {
+    expect(langs['heex']).toBe('html');
+  });
+
+  test('eruby mapeado para "html"', () => {
+    expect(langs['eruby']).toBe('html');
+  });
+});
+
+// IT-025 — emmet.includeLanguages cobre javascriptreact e typescriptreact
+describe('IT-025: emmet.includeLanguages', () => {
+  let langs;
+
+  beforeAll(() => {
+    langs = settings['emmet.includeLanguages'] || {};
+  });
+
+  test('chave presente no JSON', () => {
+    expect(settings['emmet.includeLanguages']).toBeDefined();
+  });
+
+  test('javascriptreact mapeado para "html"', () => {
+    expect(langs['javascriptreact']).toBe('html');
+  });
+
+  test('typescriptreact mapeado para "html"', () => {
+    expect(langs['typescriptreact']).toBe('html');
+  });
+});
+
+// IT-026 — chaves depreciadas ausentes
+describe('IT-026: ausência de chaves depreciadas', () => {
+  test('python.pythonPath não deve estar presente (depreciado)', () => {
+    if (Object.prototype.hasOwnProperty.call(settings, 'python.pythonPath')) {
+      // Marca como warning sem falhar hard — alinha com a spec do test_plan
+      console.warn(
+        'WARN IT-026: python.pythonPath está presente (depreciado).' +
+        ' Use python.defaultInterpreterPath.'
+      );
+    }
+    // Não falha — spec diz "warning se presente"
+    expect(true).toBe(true);
+  });
+});
+
+// IT-085 — elixirLS.dialyzerEnabled é boolean, não string
+describe('IT-085: elixirLS.dialyzerEnabled', () => {
+  test('chave presente no JSON', () => {
+    expect(settings['elixirLS.dialyzerEnabled']).toBeDefined();
+  });
+
+  test('é boolean (não string "true")', () => {
+    expect(typeof settings['elixirLS.dialyzerEnabled']).toBe('boolean');
+  });
+});

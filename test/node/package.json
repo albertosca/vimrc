@@ -1,0 +1,11 @@
+{
+  "name": "vim-config-tests",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "jest --no-coverage"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}
