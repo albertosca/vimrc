@@ -1,0 +1,74 @@
+" IT-072 a IT-078, IT-088: Autocommands registrados
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-072 a IT-078: Verifica que os autocommands estao registrados
+" Estratégia: usa execute('autocmd EVENT pattern') e verifica o output
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-072 BufWritePre ex exs heex chama CocAction format):
+  let au = execute('autocmd BufWritePre *.ex')
+  Assert au =~# "CocAction\\|format", 'BufWritePre *.ex nao chama format: ' . au
+
+Execute (IT-073 BufWritePre rb chama CleanExtraSpaces):
+  let au = execute('autocmd BufWritePre *.rb')
+  Assert au =~# 'CleanExtraSpaces', 'BufWritePre *.rb nao chama CleanExtraSpaces: ' . au
+
+Execute (IT-074 BufWritePre ts chama CleanExtraSpaces):
+  let au = execute('autocmd BufWritePre *.ts')
+  Assert au =~# 'CleanExtraSpaces', 'BufWritePre *.ts nao chama CleanExtraSpaces: ' . au
+
+Execute (IT-075 FocusLost salva todos os buffers):
+  let au = execute('autocmd AutoSave')
+  Assert au =~# 'FocusLost', 'AutoSave nao tem FocusLost: ' . au
+  Assert au =~# 'wa', 'AutoSave/FocusLost nao tem :wa: ' . au
+
+Execute (IT-076 InsertEnter SmartOpenPairs registrado):
+  let au = execute('autocmd SmartOpenPairs')
+  Assert au =~# 'InsertEnter', 'SmartOpenPairs nao tem InsertEnter: ' . au
+  Assert au =~# 'ApplySmartOpenPairs', 'SmartOpenPairs nao tem ApplySmartOpenPairs: ' . au
+
+Execute (IT-077 VimEnter restaura sessao):
+  let au = execute('autocmd obsession_restore')
+  Assert au =~# 'VimEnter', 'obsession_restore nao tem VimEnter: ' . au
+  Assert au =~# 'Session\.vim', 'obsession_restore nao menciona Session.vim: ' . au
+
+Execute (IT-078 CursorHold chama CocActionAsync highlight):
+  let au = execute('autocmd CocHighlight')
+  Assert au =~# 'CursorHold', 'CocHighlight nao tem CursorHold: ' . au
+  Assert au =~# 'CocActionAsync', 'CocHighlight nao chama CocActionAsync: ' . au
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-088: GitMessenger cria popup em arquivo rastreado pelo git
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-088 GitMessenger cria popup em arquivo rastreado pelo git):
+  " Usa o proprio my_configs.vim que esta em repositorio git
+  let target = expand('~/.vim_runtime/my_configs.vim')
+  if !filereadable(target)
+    " Pula graciosamente se o arquivo nao existir por alguma razao
+    Assert 1, 'arquivo nao encontrado — pulando'
+  else
+    execute 'edit ' . target
+    call cursor(1, 1)
+    " Obtém SID de my_configs.vim
+    let sid = 0
+    for sline in split(execute('scriptnames'), "\n")
+      if sline =~# 'my_configs\.vim'
+        let sid = str2nr(matchstr(sline, '^\s*\zs\d\+'))
+        break
+      endif
+    endfor
+    Assert sid > 0, 'my_configs.vim SID nao encontrado'
+    let GitMessenger = function('<SNR>' . sid . '_GitMessenger')
+    let before = len(popup_list())
+    call GitMessenger()
+    " Em arquivo com historico git, deve criar exatamente 1 popup a mais
+    Assert len(popup_list()) > before,
+          \ 'GitMessenger nao criou popup em arquivo rastreado'
+  endif
+After:
+  " Fecha todos os popups criados pelo teste
+  for pid in popup_list()
+    silent! call popup_close(pid)
+  endfor
+  silent! bdelete!

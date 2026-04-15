@@ -1,0 +1,143 @@
+" IT-059 a IT-071, IT-079 a IT-081: Detecção de filetype e indentação
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-059 a IT-071: Detecção de filetype por extensão
+" Estratégia: cria buffer nomeado, força filetype detection via :filetype detect
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-059 arquivo .ex detectado como elixir):
+  new
+  silent! file /tmp/test_it059.ex
+  filetype detect
+  AssertEqual 'elixir', &filetype
+After:
+  bdelete!
+
+Execute (IT-060 arquivo .exs detectado como elixir):
+  new
+  silent! file /tmp/test_it060.exs
+  filetype detect
+  AssertEqual 'elixir', &filetype
+After:
+  bdelete!
+
+Execute (IT-061 arquivo .heex detectado como heex):
+  new
+  silent! file /tmp/test_it061.heex
+  filetype detect
+  AssertEqual 'heex', &filetype
+After:
+  bdelete!
+
+Execute (IT-062 arquivo .leex detectado como eelixir):
+  new
+  silent! file /tmp/test_it062.leex
+  filetype detect
+  AssertEqual 'eelixir', &filetype
+After:
+  bdelete!
+
+Execute (IT-063 arquivo .jsx detectado como javascriptreact):
+  new
+  silent! file /tmp/test_it063.jsx
+  filetype detect
+  AssertEqual 'javascriptreact', &filetype
+After:
+  bdelete!
+
+Execute (IT-064 arquivo .tsx detectado como typescriptreact):
+  new
+  silent! file /tmp/test_it064.tsx
+  filetype detect
+  AssertEqual 'typescriptreact', &filetype
+After:
+  bdelete!
+
+Execute (IT-065 arquivo .rb detectado como ruby):
+  new
+  silent! file /tmp/test_it065.rb
+  filetype detect
+  AssertEqual 'ruby', &filetype
+After:
+  bdelete!
+
+Execute (IT-066 Gemfile detectado como ruby):
+  new
+  silent! file /tmp/Gemfile
+  filetype detect
+  AssertEqual 'ruby', &filetype
+After:
+  bdelete!
+
+Execute (IT-067 Rakefile detectado como ruby):
+  new
+  silent! file /tmp/Rakefile
+  filetype detect
+  AssertEqual 'ruby', &filetype
+After:
+  bdelete!
+
+Execute (IT-068 arquivo .erb detectado como eruby):
+  new
+  silent! file /tmp/test_it068.erb
+  filetype detect
+  AssertEqual 'eruby', &filetype
+After:
+  bdelete!
+
+Execute (IT-069 arquivo .jinja detectado como htmljinja):
+  new
+  silent! file /tmp/test_it069.jinja
+  filetype detect
+  " Vim detecta .jinja como jinja (alias de htmljinja) dependendo da versao
+  Assert &filetype =~# '\(htmljinja\|jinja\)', 'filetype inesperado para .jinja: ' . &filetype
+After:
+  bdelete!
+
+Execute (IT-070 arquivo .twig detectado como html):
+  new
+  silent! file /tmp/test_it070.twig
+  filetype detect
+  " .twig pode ser 'html' ou 'htmldjango' dependendo dos plugins instalados
+  Assert &filetype =~# '\(html\|twig\)', 'filetype inesperado para .twig: ' . &filetype
+After:
+  bdelete!
+
+Execute (IT-071 arquivo .py detectado como python):
+  new
+  silent! file /tmp/test_it071.py
+  filetype detect
+  AssertEqual 'python', &filetype
+After:
+  bdelete!
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-079 a IT-081: Indentação por filetype
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-079 arquivo .ex tem shiftwidth 2 e expandtab):
+  new
+  silent! file /tmp/test_it079.ex
+  filetype detect
+  AssertEqual 2, &shiftwidth
+  AssertEqual 1, &expandtab
+After:
+  bdelete!
+
+Execute (IT-080 arquivo .rb tem shiftwidth 2 e expandtab):
+  new
+  silent! file /tmp/test_it080.rb
+  filetype detect
+  AssertEqual 2, &shiftwidth
+  AssertEqual 1, &expandtab
+After:
+  bdelete!
+
+Execute (IT-081 arquivo .heex tem shiftwidth 2 e expandtab):
+  new
+  silent! file /tmp/test_it081.heex
+  filetype detect
+  AssertEqual 2, &shiftwidth
+  AssertEqual 1, &expandtab
+After:
+  bdelete!

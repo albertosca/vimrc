@@ -1,0 +1,7 @@
+" IT-HW: Hello world — valida que o ambiente de integração funciona
+" Deve passar antes de implementar qualquer outro integration test.
+
+Execute (IT-HW Vim carregou o vimrc e o ambiente esta funcional):
+  " Se chegou aqui, Vim iniciou com -u ~/.vimrc sem explodir
+  Assert exists(':Vader') == 2, 'Vader nao disponivel — verifique rtp'
+  Assert v:version >= 801, 'Vim muito antigo: ' . v:version

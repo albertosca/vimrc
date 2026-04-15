@@ -32,9 +32,9 @@ nmap <c-n> <Plug>yankstack_substitute_newer_paste
 " => CTRL-P
 """"""""""""""""""""""""""""""
 let g:ctrlp_working_path_mode = 0
-let g:ctrlp_map = '<c-f>'
+let g:ctrlp_map = '<c-p>'
 map <leader>j :CtrlP<cr>
-map <c-b> :CtrlPBuffer<cr>
+let g:comfortable_motion_no_default_key_mappings = 1
 let g:ctrlp_max_height = 20
 let g:ctrlp_custom_ignore = 'node_modules\|^\.DS_Store\|^\.git\|^\.coffee'
 

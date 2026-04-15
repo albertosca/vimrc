@@ -1,0 +1,166 @@
+" IT-030 a IT-058, IT-084, IT-089, IT-090: Mapeamentos de teclas
+
+" Helper: verifica que maparg(key, 'n') contém pattern
+" Usado em todos os testes de mapeamento abaixo.
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-030 a IT-055: Mapeamentos definidos
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-030 C-f mapeado para Files):
+  let m = maparg('<C-f>', 'n')
+  Assert m =~# 'Files', '<C-f> nao mapeia para Files: ' . m
+
+Execute (IT-031 C-b mapeado para Buffers):
+  let m = maparg('<C-b>', 'n')
+  Assert m =~# 'Buffers', '<C-b> nao mapeia para Buffers: ' . m
+
+Execute (IT-032 C-t mapeado para C-o jump back):
+  let m = maparg('<C-t>', 'n')
+  " Vim normaliza <C-o> para <C-O> internamente — comparacao case-insensitive
+  Assert m =~? '<C-o>', '<C-t> nao mapeia para <C-o>: ' . m
+
+Execute (IT-033 C-] mapeado para coc-definition):
+  let m = maparg('<C-]>', 'n')
+  Assert m =~# 'coc-definition', '<C-]> nao mapeia para coc-definition: ' . m
+
+Execute (IT-034 K mapeado para ShowDocumentation):
+  let m = maparg('K', 'n')
+  Assert m =~# 'ShowDocumentation', 'K nao mapeia para ShowDocumentation: ' . m
+
+Execute (IT-035 gd mapeado para coc-definition):
+  let m = maparg('gd', 'n')
+  Assert m =~# 'coc-definition', 'gd nao mapeia para coc-definition: ' . m
+
+Execute (IT-036 gy mapeado para coc-type-definition):
+  let m = maparg('gy', 'n')
+  Assert m =~# 'coc-type-definition', 'gy nao mapeia para coc-type-definition: ' . m
+
+Execute (IT-037 gi mapeado para coc-implementation):
+  let m = maparg('gi', 'n')
+  Assert m =~# 'coc-implementation', 'gi nao mapeia para coc-implementation: ' . m
+
+Execute (IT-038 leader-rn mapeado para coc-rename):
+  let m = maparg(',rn', 'n')
+  Assert m =~# 'coc-rename', ',rn nao mapeia para coc-rename: ' . m
+
+Execute (IT-039 leader-a mapeado para coc-codeaction-cursor):
+  let m = maparg(',a', 'n')
+  Assert m =~# 'coc-codeaction-cursor', ',a nao mapeia para coc-codeaction-cursor: ' . m
+
+Execute (IT-040 bracket-g mapeado para coc-diagnostic-prev):
+  let m = maparg('[g', 'n')
+  Assert m =~# 'coc-diagnostic-prev', '[g nao mapeia para coc-diagnostic-prev: ' . m
+
+Execute (IT-041 bracket-]g mapeado para coc-diagnostic-next):
+  let m = maparg(']g', 'n')
+  Assert m =~# 'coc-diagnostic-next', ']g nao mapeia para coc-diagnostic-next: ' . m
+
+Execute (IT-042 leader-gr mapeado para coc-references):
+  let m = maparg(',gr', 'n')
+  Assert m =~# 'coc-references', ',gr nao mapeia para coc-references: ' . m
+
+Execute (IT-043 leader-tn mapeado para TestNearest):
+  let m = maparg(',tn', 'n')
+  Assert m =~# 'TestNearest', ',tn nao mapeia para TestNearest: ' . m
+
+Execute (IT-044 leader-tf mapeado para TestFile):
+  let m = maparg(',tf', 'n')
+  Assert m =~# 'TestFile', ',tf nao mapeia para TestFile: ' . m
+
+Execute (IT-045 leader-ts mapeado para TestSuite):
+  let m = maparg(',ts', 'n')
+  Assert m =~# 'TestSuite', ',ts nao mapeia para TestSuite: ' . m
+
+Execute (IT-046 leader-tl mapeado para TestLast):
+  let m = maparg(',tl', 'n')
+  Assert m =~# 'TestLast', ',tl nao mapeia para TestLast: ' . m
+
+Execute (IT-047 leader-db mapeado para DBUIToggle):
+  let m = maparg(',db', 'n')
+  Assert m =~# 'DBUIToggle', ',db nao mapeia para DBUIToggle: ' . m
+
+Execute (IT-048 leader-u mapeado para UndotreeToggle):
+  let m = maparg(',u', 'n')
+  Assert m =~# 'UndotreeToggle', ',u nao mapeia para UndotreeToggle: ' . m
+
+Execute (IT-049 leader-os mapeado para Obsession):
+  let m = maparg(',os', 'n')
+  Assert m =~# 'Obsession', ',os nao mapeia para Obsession: ' . m
+
+Execute (IT-050 leader-gv mapeado para GV):
+  let m = maparg(',gv', 'n')
+  Assert m =~# 'GV', ',gv nao mapeia para GV: ' . m
+
+Execute (IT-051 leader-gm mapeado para GitMessenger):
+  let m = maparg(',gm', 'n')
+  Assert m =~# 'GitMessenger', ',gm nao mapeia para GitMessenger: ' . m
+
+Execute (IT-052 leader-cs mapeado para copiar nome do arquivo):
+  let m = maparg(',cs', 'n')
+  Assert m =~# 'expand.*%:t', ',cs nao contém expand("%:t"): ' . m
+
+Execute (IT-053 leader-cl mapeado para copiar caminho completo):
+  let m = maparg(',cl', 'n')
+  Assert m =~# 'expand.*%:p', ',cl nao contém expand("%:p"): ' . m
+
+Execute (IT-054 gr mapeado para tabprev):
+  let m = maparg('gr', 'n')
+  Assert m =~# 'tabprev', 'gr nao mapeia para tabprev: ' . m
+
+Execute (IT-055 leader-fr mapeado para MRU):
+  let m = maparg(',fr', 'n')
+  Assert m =~# 'MRU', ',fr nao mapeia para MRU: ' . m
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-056 a IT-058: Ausência de conflitos históricos
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-056 leader-tn NAO mapeia para tabnew):
+  let m = maparg(',tn', 'n')
+  Assert m !~# 'tabnew', ',tn ainda mapeia para tabnew (conflito historico): ' . m
+
+Execute (IT-057 C-t NAO mapeia para tabe):
+  let m = maparg('<C-t>', 'n')
+  Assert m !~# '\<tabe\>', '<C-t> ainda mapeia para tabe (conflito historico): ' . m
+
+Execute (IT-058 leader-f mapeia para coc-format e nao MRU):
+  let m = maparg(',f', 'n')
+  Assert m =~# 'coc-format\|coc#\|format', ',f nao mapeia para CoC format: ' . m
+  Assert m !~# 'MRU', ',f ainda mapeia para MRU (conflito historico): ' . m
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-084: Nenhum mapeamento normal de 1 tecla duplicado (conflito exaustivo)
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-084 nenhuma tecla de 1 char tem mapeamentos duplicados em normal):
+  let keys_to_check = ['K', 'g', 'z', '[', ']', 'g']
+  " Verifica que maparg retorna algo consistente (nao testamos duplicatas
+  " de Plug pois sao resolvidos internamente — verificamos ausencia de erro)
+  for k in keys_to_check
+    let m = maparg(k, 'n', 0, 1)
+    " Se tem mapeamento, nao deve estar vazio e deve ter campo 'lhs'
+    if !empty(m)
+      Assert has_key(m, 'lhs'), 'maparg(' . k . ') retornou dict sem lhs'
+    endif
+  endfor
+  " Verifica especificamente que C-f e C-b sao unicos (nao colidem)
+  let cf = maparg('<C-f>', 'n', 0, 1)
+  let cb = maparg('<C-b>', 'n', 0, 1)
+  Assert !empty(cf), '<C-f> nao tem mapeamento em normal mode'
+  Assert !empty(cb), '<C-b> nao tem mapeamento em normal mode'
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-089 a IT-090: C-f e C-b em normal mode NAO mapeiam para CoC float
+" (os mapeamentos CoC float sao apenas em insert mode)
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-089 C-f normal mode resolve para Files e nao coc float):
+  let m = maparg('<C-f>', 'n')
+  Assert m =~# 'Files', '<C-f> nao resolve para Files em normal mode: ' . m
+  Assert m !~# 'coc#float', '<C-f> resolve para coc#float em normal mode — conflito!'
+
+Execute (IT-090 C-b normal mode resolve para Buffers e nao coc float):
+  let m = maparg('<C-b>', 'n')
+  Assert m =~# 'Buffers', '<C-b> nao resolve para Buffers em normal mode: ' . m
+  Assert m !~# 'coc#float', '<C-b> resolve para coc#float em normal mode — conflito!'

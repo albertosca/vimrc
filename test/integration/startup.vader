@@ -1,0 +1,39 @@
+" IT-027 a IT-029, IT-082, IT-083: Startup e ambiente
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-027: Vim inicia sem erros
+" Testamos indiretamente: se chegamos aqui sem exception, o vimrc carregou.
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-027 Vim inicia sem mensagens de erro no viminfo):
+  " Se houve E-codes durante startup, messages() os conteria
+  let msgs = execute('messages')
+  Assert msgs !~# 'E\d\+:', 'Erro de startup encontrado: ' . msgs
+
+Execute (IT-028 Pathogen carregou plugins sem E492):
+  let msgs = execute('messages')
+  Assert msgs !~# 'E492', 'E492 (comando desconhecido) encontrado nos messages'
+
+Execute (IT-029 my_configs.vim foi sourced — variaveis globais presentes):
+  " Se my_configs.vim foi sourced, g:rooter_patterns estara definido
+  Assert exists('g:rooter_patterns'), 'g:rooter_patterns nao definido — my_configs nao foi sourced'
+  Assert exists('g:coc_global_extensions'), 'g:coc_global_extensions nao definido'
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-082: Zero erros E\d+ com shim XDG (verificado via messages)
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-082 Nenhum erro E-code na sessao atual):
+  let msgs = execute('messages')
+  " Filtra linhas com E seguido de digitos e dois-pontos (padrao de erro vim)
+  let errors = filter(split(msgs, "\n"), 'v:val =~# "E\\d\\+:"')
+  AssertEqual [], errors, 'Erros encontrados: ' . join(errors, ' | ')
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-083: augroup SmartOpenPairs registrado com InsertEnter
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-083 augroup SmartOpenPairs existe):
+  let au = execute('autocmd SmartOpenPairs')
+  Assert au =~# 'InsertEnter', 'InsertEnter nao encontrado em SmartOpenPairs: ' . au
+  Assert au =~# 'ApplySmartOpenPairs', 'ApplySmartOpenPairs nao encontrado: ' . au

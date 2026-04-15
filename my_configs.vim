@@ -244,7 +244,10 @@ function! ShowDocumentation()
 endfunction
 
 " Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
+augroup CocHighlight
+  autocmd!
+  autocmd CursorHold * silent call CocActionAsync('highlight')
+augroup end
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
@@ -491,7 +494,10 @@ nmap <silent> <leader>gm :call <SID>GitMessenger()<CR>
 " Auto-save e trailing whitespace extra
 " =============================================================================
 " Salva todos os buffers ao perder o foco (saiu da janela/app)
-autocmd FocusLost * silent! wa
+augroup AutoSave
+  autocmd!
+  autocmd FocusLost * silent! wa
+augroup end
 
 " Extend trailing whitespace removal para Elixir, Ruby, TS, CSS
 autocmd BufWritePre *.ex,*.exs,*.heex,*.rb,*.rake,*.erb,*.ts,*.tsx,*.css,*.scss
