@@ -72,7 +72,7 @@ suite_line() {
     warn_str="  ${YELLOW}${warn} warn${RESET}"
   fi
 
-  printf "  %b%s%b  %-16s %b%s passed%b%s  %b%s failed%b  %b%s%b\n" \
+  printf "  %b%s%b  %-16s %b%s passed%b%b  %b%s failed%b  %b%s%b\n" \
     "$color" "$icon" "$RESET" \
     "$name" \
     "$GREEN" "$pass" "$RESET" \
