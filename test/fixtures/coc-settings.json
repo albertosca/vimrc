@@ -13,28 +13,43 @@
   "typescript.preferences.quoteStyle": "single",
   "typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
   "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
+  "typescript.inlayHints.parameterNames.enabled": "literals",
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  "javascript.inlayHints.parameterNames.enabled": "literals",
+  "javascript.inlayHints.functionLikeReturnTypes.enabled": true,
 
   "elixir.pathToElixirLS": "~/.elixir-ls/release/language_server.sh",
   "elixirLS.dialyzerEnabled": true,
   "elixirLS.suggestSpecs": true,
   "elixirLS.fetchDeps": false,
 
-  "solargraph.diagnostics": true,
-  "solargraph.completion": true,
-  "solargraph.definitions": true,
-  "solargraph.hover": true,
-  "solargraph.references": true,
-  "solargraph.rename": true,
-  "solargraph.symbols": true,
-  "solargraph.useBundler": true,
-  "solargraph.autoformat": false,
+  "languageserver": {
+    "ruby-lsp": {
+      "command": "ruby-lsp",
+      "filetypes": ["ruby", "eruby"],
+      "initializationOptions": {
+        "enabledFeatures": {
+          "diagnostics": true,
+          "formatting": true,
+          "codeActions": true,
+          "inlayHint": true
+        },
+        "formatter": "auto"
+      }
+    }
+  },
 
-  "pyright.inlayHints.functionReturnTypes": false,
+  "pyright.inlayHints.functionReturnTypes": true,
   "pyright.inlayHints.variableTypes": false,
-  "pyright.inlayHints.parameterTypes": false,
+  "pyright.inlayHints.parameterTypes": true,
   "python.defaultInterpreterPath": "python3",
   "python.analysis.typeCheckingMode": "basic",
   "python.analysis.autoImportCompletions": true,
+
+  "go.inlayHints.parameterNames": true,
+  "go.inlayHints.assignVariableTypes": true,
+  "go.inlayHints.compositeLiteralTypes": true,
+  "go.inlayHints.functionTypeParameters": true,
 
   "css.validate": true,
   "scss.validate": true,

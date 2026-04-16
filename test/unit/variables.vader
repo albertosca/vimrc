@@ -98,14 +98,15 @@ Execute (UT-050 projectionist Gemfile model alterna para spec):
 " UT-051 a UT-052: CoC — lista de extensões
 " ─────────────────────────────────────────────────────────────────────────────
 
-Execute (UT-051 coc_global_extensions contem todas as 21 extensoes):
+Execute (UT-051 coc_global_extensions contem todas as 23 extensoes):
   let required = [
-        \ 'coc-elixir', 'coc-solargraph', 'coc-tsserver', 'coc-pyright',
+        \ 'coc-elixir', 'coc-tsserver', 'coc-pyright',
         \ 'coc-css', 'coc-tailwindcss', 'coc-eslint', 'coc-prettier',
         \ 'coc-emmet', 'coc-snippets', 'coc-sql', 'coc-html',
         \ 'coc-json', 'coc-yaml', 'coc-xml', 'coc-sh',
         \ 'coc-git', 'coc-yank', 'coc-docker', 'coc-browser',
-        \ 'coc-markdownlint'
+        \ 'coc-markdownlint',
+        \ 'coc-go', 'coc-ruff'
         \ ]
   for ext in required
     Assert index(g:coc_global_extensions, ext) >= 0,
@@ -113,10 +114,11 @@ Execute (UT-051 coc_global_extensions contem todas as 21 extensoes):
   endfor
 
 Execute (UT-052 coc_global_extensions sem extensoes descontinuadas):
-  let banned = ['coc-rome', 'coc-java', 'coc-texlab', 'coc-powershell']
+  let banned = ['coc-rome', 'coc-java', 'coc-texlab', 'coc-powershell',
+        \ 'coc-solargraph']
   for ext in banned
     Assert index(g:coc_global_extensions, ext) < 0,
-          \ 'extensao banida presente: ' . ext
+          \ 'extensao banida/descontinuada presente: ' . ext
   endfor
 
 " ─────────────────────────────────────────────────────────────────────────────
@@ -211,3 +213,34 @@ Execute (UT-070 sem vnoremap dollar-1 e dollar-q):
   let mq = maparg('$q', 'v')
   Assert empty(m1), 'vnoremap $1 deveria ter sido removido: ' . m1
   Assert empty(mq), 'vnoremap $q deveria ter sido removido: ' . mq
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-071 a UT-075: Melhorias de LSP e linting — 10/10 setup
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-071 coc_global_extensions contem coc-go para Go LSP):
+  " vim-go cuida de motions/commands, coc-go cuida de completion/diagnostics
+  Assert index(g:coc_global_extensions, 'coc-go') >= 0,
+        \ 'coc-go ausente — Go fica sem LSP no CoC'
+
+Execute (UT-072 coc_global_extensions contem coc-ruff para Python linting):
+  " Ruff e 10-100x mais rapido que flake8/pylint e substitui todos
+  Assert index(g:coc_global_extensions, 'coc-ruff') >= 0,
+        \ 'coc-ruff ausente — Python fica sem linter rapido'
+
+Execute (UT-073 coc-solargraph removido da lista de extensoes):
+  " Ruby LSP (Shopify) substitui Solargraph — configurado via languageserver
+  Assert index(g:coc_global_extensions, 'coc-solargraph') < 0,
+        \ 'coc-solargraph deveria ser removido (substituido por Ruby LSP)'
+
+Execute (UT-074 vim-go golangci-lint configurado):
+  " golangci-lint e o meta-linter padrao de Go
+  Assert exists('g:go_metalinter_command'),
+        \ 'g:go_metalinter_command nao definido'
+  Assert g:go_metalinter_command =~# 'golangci-lint',
+        \ 'go_metalinter_command deveria usar golangci-lint: ' . g:go_metalinter_command
+
+Execute (UT-075 vim-go metalinter habilitado no save):
+  Assert exists('g:go_metalinter_autosave'),
+        \ 'g:go_metalinter_autosave nao definido'
+  AssertEqual 1, g:go_metalinter_autosave

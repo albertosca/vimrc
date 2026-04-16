@@ -135,3 +135,44 @@ describe('IT-085: elixirLS.dialyzerEnabled', () => {
     expect(typeof settings['elixirLS.dialyzerEnabled']).toBe('boolean');
   });
 });
+
+// IT-116 — Ruby LSP configurado como language server
+describe('IT-119: Ruby LSP (languageserver.ruby-lsp)', () => {
+  test('languageserver definido no JSON', () => {
+    expect(settings['languageserver']).toBeDefined();
+  });
+
+  test('ruby-lsp presente em languageserver', () => {
+    expect(settings['languageserver']['ruby-lsp']).toBeDefined();
+  });
+
+  test('ruby-lsp command é ruby-lsp', () => {
+    const rubyLsp = settings['languageserver']['ruby-lsp'];
+    expect(rubyLsp.command).toBe('ruby-lsp');
+  });
+
+  test('ruby-lsp cobre filetypes ruby e eruby', () => {
+    const ft = settings['languageserver']['ruby-lsp'].filetypes;
+    expect(ft).toContain('ruby');
+    expect(ft).toContain('eruby');
+  });
+});
+
+// IT-120 — Inlay hints habilitados para Go, TS e Python
+describe('IT-120: Inlay hints habilitados', () => {
+  test('Go inlay hints para parameter names', () => {
+    expect(settings['go.inlayHints.parameterNames']).toBe(true);
+  });
+
+  test('TypeScript inlay hints para parameter names', () => {
+    const val = settings['typescript.inlayHints.parameterNames.enabled'];
+    expect(val).toBeDefined();
+    expect(val).not.toBe('none');
+  });
+
+  test('JavaScript inlay hints para parameter names', () => {
+    const val = settings['javascript.inlayHints.parameterNames.enabled'];
+    expect(val).toBeDefined();
+    expect(val).not.toBe('none');
+  });
+});

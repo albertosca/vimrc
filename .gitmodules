@@ -142,3 +142,11 @@
 	path = plugins/vim-visual-multi
 	url = https://github.com/mg979/vim-visual-multi
 	ignore = dirty
+[submodule "plugins/vim-matchup"]
+	path = plugins/vim-matchup
+	url = https://github.com/andymass/vim-matchup
+	ignore = dirty
+[submodule "plugins/vim-sleuth"]
+	path = plugins/vim-sleuth
+	url = https://github.com/tpope/vim-sleuth
+	ignore = dirty

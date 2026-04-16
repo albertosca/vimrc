@@ -62,3 +62,23 @@ Execute (IT-115 colorscheme ativo e gruvbox):
   " Após limpar os layers anteriores, gruvbox deve ser o ativo
   AssertEqual 'gruvbox', get(g:, 'colors_name', ''),
         \ 'colorscheme ativo nao e gruvbox: ' . get(g:, 'colors_name', 'NONE')
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-116 a IT-118: Novos plugins — vim-matchup, vim-sleuth
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-116 vim-matchup presente no runtimepath):
+  " Matching inteligente de do/end, def/end, tags JSX com %
+  Assert &rtp =~# 'vim-matchup',
+        \ 'vim-matchup nao encontrado no rtp'
+
+Execute (IT-117 vim-matchup substituiu matchit):
+  " vim-matchup define o comando :MatchupWhereAmI
+  " e desabilita matchit automaticamente
+  Assert exists('g:loaded_matchit') || exists('g:loaded_matchup'),
+        \ 'nem matchit nem matchup carregados'
+
+Execute (IT-118 vim-sleuth presente no runtimepath):
+  " Deteccao automatica de indent (tabs vs spaces, width)
+  Assert &rtp =~# 'vim-sleuth',
+        \ 'vim-sleuth nao encontrado no rtp'

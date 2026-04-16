@@ -337,13 +337,14 @@ let g:coc_global_extensions = [
       \ 'coc-yaml',
       \ 'coc-yank',
       \ 'coc-xml',
-      \ 'coc-solargraph',
       \ 'coc-emmet',
       \ 'coc-sql',
       \ 'coc-tsserver',
       \ 'coc-pyright',
       \ 'coc-snippets',
-      \ 'coc-tailwindcss'
+      \ 'coc-tailwindcss',
+      \ 'coc-go',
+      \ 'coc-ruff'
       \ ]
 
 " =============================================================================
