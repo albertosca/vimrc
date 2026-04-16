@@ -82,3 +82,23 @@ Execute (IT-118 vim-sleuth presente no runtimepath):
   " Deteccao automatica de indent (tabs vs spaces, width)
   Assert &rtp =~# 'vim-sleuth',
         \ 'vim-sleuth nao encontrado no rtp'
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-152 a IT-155: AI tools — copilot-chat, vim-claude-code, auto-reload
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-152 copilot-chat.vim presente no runtimepath):
+  Assert &rtp =~# 'copilot-chat',
+        \ 'copilot-chat.vim nao encontrado no rtp'
+
+Execute (IT-153 vim-claude-code presente no runtimepath):
+  Assert &rtp =~# 'vim-claude-code',
+        \ 'vim-claude-code nao encontrado no rtp'
+
+Execute (IT-154 comando Claude existe):
+  Assert exists(':Claude') == 2,
+        \ 'comando :Claude nao existe (vim-claude-code nao carregou)'
+
+Execute (IT-155 comando CopilotChatOpen existe):
+  Assert exists(':CopilotChatOpen') == 2,
+        \ 'comando :CopilotChatOpen nao existe (copilot-chat nao carregou)'

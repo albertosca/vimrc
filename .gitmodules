@@ -150,3 +150,11 @@
 	path = plugins/vim-sleuth
 	url = https://github.com/tpope/vim-sleuth
 	ignore = dirty
+[submodule "plugins/copilot-chat.vim"]
+	path = plugins/copilot-chat.vim
+	url = https://github.com/DanBradbury/copilot-chat.vim
+	ignore = dirty
+[submodule "plugins/vim-claude-code"]
+	path = plugins/vim-claude-code
+	url = https://github.com/rishi-opensource/vim-claude-code
+	ignore = dirty

@@ -496,3 +496,33 @@ augroup ExtraCleanExtraSpaces
   autocmd BufWritePre *.ex,*.exs,*.heex,*.rb,*.rake,*.erb,*.ts,*.tsx,*.css,*.scss
         \ call CleanExtraSpaces()
 augroup end
+
+" =============================================================================
+" Auto-reload — detecta mudanças feitas por agentes de IA (Claude Code, etc.)
+" Requer tmux: set -g focus-events on  (no ~/.tmux.conf)
+" =============================================================================
+augroup AgentAutoReload
+  autocmd!
+  autocmd FocusGained,BufEnter * silent! checktime
+  autocmd CursorHold * silent! checktime
+augroup end
+
+" Terminal sync — evita flickering com TUI apps (Claude Code) no :terminal
+if exists('+termsync')
+  set termsync
+endif
+
+" =============================================================================
+" vim-claude-code — Claude Code CLI integrado no Vim
+" Toggle: Ctrl+\  |  Prefix: ,c  |  Layout: split direito 40%
+" =============================================================================
+let g:claude_code_position = 'right'
+let g:claude_code_split_ratio = 0.4
+
+" =============================================================================
+" copilot-chat.vim — Chat com Copilot dentro do Vim
+" Nota: ,c* é reservado para vim-claude-code (explain, fix, refactor, etc.)
+" =============================================================================
+" ,pc → abre o chat Copilot   visual ,cq → pergunta sobre seleção
+nnoremap <leader>pc :CopilotChatOpen<CR>
+xnoremap <leader>cq :CopilotChat<space>

@@ -311,3 +311,12 @@ Execute (IT-143 comando Format existe):
 
 Execute (IT-144 comando OR existe):
   Assert exists(':OR') == 2, 'comando :OR nao existe'
+
+Execute (IT-156 leader-pc mapeado para CopilotChatOpen):
+  let m = maparg(',pc', 'n')
+  Assert m =~# 'CopilotChatOpen', ',pc nao mapeia para CopilotChatOpen: ' . m
+
+Execute (IT-157 Ctrl-backslash mapeado para Claude toggle):
+  " vim-claude-code usa C-\ como toggle por default
+  let m = maparg("\<C-\\>", 'n')
+  Assert !empty(m), 'C-\ nao tem mapping (vim-claude-code toggle)'

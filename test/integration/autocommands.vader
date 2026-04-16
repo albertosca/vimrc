@@ -159,6 +159,16 @@ Execute (IT-147 DadbodCompletion augroup existe):
   Assert autocmds =~# 'sql\|mysql\|plsql',
         \ 'augroup DadbodCompletion deveria cobrir filetypes SQL'
 
+Execute (IT-158 AgentAutoReload augroup com checktime existe):
+  " Auto-reload quando agentes de IA editam arquivos
+  redir => autocmds
+  silent autocmd AgentAutoReload
+  redir END
+  Assert autocmds =~# 'checktime',
+        \ 'augroup AgentAutoReload deveria ter checktime'
+  Assert autocmds =~# 'FocusGained\|BufEnter',
+        \ 'AgentAutoReload deveria reagir a FocusGained ou BufEnter'
+
 Execute (IT-148 coc_folding augroup com formatexpr existe):
   redir => autocmds
   silent autocmd coc_folding
