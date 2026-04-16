@@ -31,15 +31,9 @@ set expandtab
 set softtabstop=2
 set smartindent
 
-" Move vim tabs with ctrl+shift+arrow right or left
+" Move vim tabs with ctrl+shift+arrow right or left (normal mode only)
 nnoremap <C-S-h> :tabmove -1<cr>
 nnoremap <C-S-l> :tabmove +1<cr>
-inoremap <C-S-h> :tabmove -1<cr>
-inoremap <C-S-l> :tabmove +1<cr>
-vnoremap <C-S-h> :tabmove -1<cr>
-vnoremap <C-S-l> :tabmove +1<cr>
-"Multiple cursors net key
-let g:multi_cursor_next_key="<C-n>"
 
 "Git gutter
 let g:gitgutter_enabled=1
@@ -61,12 +55,9 @@ set scrolloff=8         "Start scrolling when we're 8 lines away from margins
 set sidescrolloff=15
 set sidescroll=1
 
-" Search highligh toggle
-set hlsearch!
+" Search highlight off by default, F3 to toggle
+set nohlsearch
 nnoremap <F3> :set hlsearch!<CR>
-
-" MRU: remap para ,fr (,f foi tomado pelo CoC Format)
-map <leader>fr :MRU<CR>
 
 " Copy current filename (,cs) and full path (,cl) to clipboard
 nnoremap <silent> <leader>cs :let @+=expand("%:t")<CR>:echo 'Copied: ' . expand('%:t')<CR>
@@ -87,8 +78,11 @@ let test#ruby#rspec#executable = 'bundle exec rspec'
 " coc-emmet for fast HTML/JSX expansions
 
 " Ensure JSX/TSX filetypes are recognized
-autocmd BufNewFile,BufRead *.jsx set filetype=javascriptreact
-autocmd BufNewFile,BufRead *.tsx set filetype=typescriptreact
+augroup JsxTsxFiletypes
+  autocmd!
+  autocmd BufNewFile,BufRead *.jsx set filetype=javascriptreact
+  autocmd BufNewFile,BufRead *.tsx set filetype=typescriptreact
+augroup end
 
 " =============================================================================
 " Database Configuration (vim-dadbod)
@@ -105,7 +99,10 @@ let g:db_ui_use_nerd_fonts = 1
 let g:db_ui_show_database_icon = 1
 
 " dadbod-completion: enable in SQL and dadbod buffers
-autocmd FileType sql,mysql,plsql call coc#config('suggest.autoTrigger', 'always')
+augroup DadbodCompletion
+  autocmd!
+  autocmd FileType sql,mysql,plsql call coc#config('suggest.autoTrigger', 'always')
+augroup end
 
 " =============================================================================
 " Elixir Configuration
@@ -177,7 +174,10 @@ let g:surround_61  = "<%= \r %>"
 let g:surround_37  = "<% \r %>"
 
 " Auto-format Elixir files on save via mix format
-autocmd BufWritePre *.ex,*.exs,*.heex silent! call CocAction('format')
+augroup ElixirFormat
+  autocmd!
+  autocmd BufWritePre *.ex,*.exs,*.heex silent! call CocAction('format')
+augroup end
 
 " =============================================================================
 " Test Runner (vim-test)
@@ -192,7 +192,6 @@ nmap <silent> <leader>tv :TestVisit<CR>
 " Pretty fonts and icons
 " =============================================================================
 set guifont=Font\ Awesome\ 14
-let g:airline_powerline_fonts=1
 
 " Enable folding via CoC (much faster than indent)
 set foldmethod=manual
@@ -201,11 +200,6 @@ augroup coc_folding
   autocmd!
   autocmd FileType typescript,json,javascript,python,go,elixir setl formatexpr=CocAction('formatSelected')
 augroup end
-
-" Disable legacy syntastic/ALE to let CoC handle everything via LSP
-let g:syntastic_javascript_checkers = []
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
 
 " =============================================================================
 " CoC (Conquer of Completion) Configuration
@@ -491,6 +485,16 @@ endfunction
 nmap <silent> <leader>gm :call <SID>GitMessenger()<CR>
 
 " =============================================================================
+" Undodir cleanup — remove arquivos de undo com mais de 90 dias
+" =============================================================================
+augroup UndoCleanup
+  autocmd!
+  autocmd VimEnter * silent! call timer_start(3000, {-> system(
+        \ 'find ' . expand('~/.vim_runtime/temp_dirs/undodir') .
+        \ ' -type f -mtime +90 -delete 2>/dev/null &')})
+augroup end
+
+" =============================================================================
 " Auto-save e trailing whitespace extra
 " =============================================================================
 " Salva todos os buffers ao perder o foco (saiu da janela/app)
@@ -500,5 +504,8 @@ augroup AutoSave
 augroup end
 
 " Extend trailing whitespace removal para Elixir, Ruby, TS, CSS
-autocmd BufWritePre *.ex,*.exs,*.heex,*.rb,*.rake,*.erb,*.ts,*.tsx,*.css,*.scss
-      \ call CleanExtraSpaces()
+augroup ExtraCleanExtraSpaces
+  autocmd!
+  autocmd BufWritePre *.ex,*.exs,*.heex,*.rb,*.rake,*.erb,*.ts,*.tsx,*.css,*.scss
+        \ call CleanExtraSpaces()
+augroup end
