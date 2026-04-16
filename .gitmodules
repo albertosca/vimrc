@@ -138,3 +138,7 @@
 	url = https://github.com/preservim/vimux
 	ignore = dirty
 
+[submodule "my_plugins/vim-visual-multi"]
+	path = my_plugins/vim-visual-multi
+	url = https://github.com/mg979/vim-visual-multi
+	ignore = dirty
