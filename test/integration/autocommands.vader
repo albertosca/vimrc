@@ -98,6 +98,79 @@ Execute (IT-109 undodir cleanup autocmd existe):
   Assert autocmds =~# 'undodir\|UndoCleanup',
         \ 'autocmd de cleanup do undodir deveria existir'
 
+Execute (IT-121 sem coffee no BufWritePre CleanExtraSpaces):
+  " CoffeeScript removido — .coffee nao deveria estar na lista
+  redir => autocmds
+  silent autocmd BufWritePre *.coffee
+  redir END
+  Assert autocmds !~# 'CleanExtraSpaces',
+        \ 'BufWritePre *.coffee ainda chama CleanExtraSpaces (coffee removido)'
+
+Execute (IT-122 sem mako filetype detection):
+  " vim-bundle-mako removido — *.mako detection e dead code
+  redir => autocmds
+  silent autocmd BufNewFile *.mako
+  redir END
+  redir => autocmds2
+  silent autocmd BufRead *.mako
+  redir END
+  Assert autocmds !~# 'mako' && autocmds2 !~# 'mako',
+        \ 'autocmd *.mako deveria ter sido removido (plugin mako removido)'
+
+Execute (IT-123 Python F nao sobrescreve motion nativa):
+  " F e uma motion util (find backward) — nao deve ser sobrescrita
+  new
+  setfiletype python
+  doautocmd FileType python
+  let m = maparg('F', 'n', 0, 1)
+  let has_fold_override = !empty(m) && get(m, 'buffer', 0)
+  bdelete!
+  Assert !has_fold_override,
+        \ 'F em python sobrescreve motion nativa (find backward)'
+
+Execute (IT-124 db_queries no gitignore):
+  " Queries podem conter connection strings com senhas
+  let gitignore = readfile(expand('~/.vim_runtime/.gitignore'))
+  let has_db_queries = 0
+  for line in gitignore
+    if line =~# 'db_queries'
+      let has_db_queries = 1
+      break
+    endif
+  endfor
+  Assert has_db_queries, 'db_queries/ deveria estar no .gitignore (seguranca)'
+
+Execute (IT-125 pathogen infect chamado apenas uma vez):
+  " plugins.vim nao deve chamar pathogen#infect (ja chamado no .vimrc)
+  let plugins_vim = readfile(expand('~/.vim_runtime/vimrcs/plugins.vim'))
+  let infect_count = 0
+  for line in plugins_vim
+    if line =~# 'pathogen#infect'
+      let infect_count += 1
+    endif
+  endfor
+  AssertEqual 0, infect_count,
+        \ 'plugins.vim nao deveria chamar pathogen#infect (ja no .vimrc)'
+
+Execute (IT-126 funcoes CmdLine e VisualSelection nao duplicadas):
+  " Devem existir em apenas um arquivo (options.vim ou editor.vim)
+  let options_vim = readfile(expand('~/.vim_runtime/vimrcs/options.vim'))
+  let editor_vim = readfile(expand('~/.vim_runtime/vimrcs/editor.vim'))
+  let in_options = 0
+  let in_editor = 0
+  for line in options_vim
+    if line =~# '^\s*function!\?\s\+CmdLine'
+      let in_options = 1
+    endif
+  endfor
+  for line in editor_vim
+    if line =~# '^\s*function!\?\s\+CmdLine'
+      let in_editor = 1
+    endif
+  endfor
+  Assert !(in_options && in_editor),
+        \ 'CmdLine() definida em ambos options.vim E editor.vim (duplicata)'
+
 " ─────────────────────────────────────────────────────────────────────────────
 " IT-088: GitMessenger cria popup em arquivo rastreado pelo git
 " ─────────────────────────────────────────────────────────────────────────────

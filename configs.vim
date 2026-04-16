@@ -1,6 +1,3 @@
-" Basic encoding is basic
-set encoding=utf8
-
 " Highlight cursor line
 set cursorline
 
@@ -37,12 +34,6 @@ nnoremap <C-S-l> :tabmove +1<cr>
 
 "Git gutter
 let g:gitgutter_enabled=1
-
-" shortcuts for changing windows
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
 
 " Display tabs and trailing spaces visually
 set list listchars=tab:\ \ ,trail:·
@@ -112,24 +103,24 @@ augroup end
 
 " Configuring vim mix format
 let g:mix_format_on_save = 1
-nmap <Leader>mf :MixFormat<CR>
-nmap <Leader>md :MixFormatDiff<CR>
+nnoremap <Leader>mf :MixFormat<CR>
+nnoremap <Leader>md :MixFormatDiff<CR>
 
 " Vim test for Elixir
 let test#elixir#exunit#executable = 'mix test'
 let test#strategy = "vimux"
 
 " Vimux: Utility mappings
-nmap <Leader>vp :VimuxPromptCommand<CR>
-nmap <Leader>vl :VimuxRunLastCommand<CR>
-nmap <Leader>vq :VimuxCloseRunner<CR>
-nmap <Leader>vx :VimuxInterruptRunner<CR>
+nnoremap <Leader>vp :VimuxPromptCommand<CR>
+nnoremap <Leader>vl :VimuxRunLastCommand<CR>
+nnoremap <Leader>vq :VimuxCloseRunner<CR>
+nnoremap <Leader>vx :VimuxInterruptRunner<CR>
 
 " Elixir: Run Credo for strict linting
-nmap <Leader>lc :call VimuxRunCommand("mix credo --strict")<CR>
+nnoremap <Leader>lc :call VimuxRunCommand("mix credo --strict")<CR>
 
 " Elixir: Open IEx REPL in a split
-nmap <Leader>ie :call VimuxRunCommand("iex -S mix")<CR>
+nnoremap <Leader>ie :call VimuxRunCommand("iex -S mix")<CR>
 
 " Elixir: Projectionist configurations (switching between lib and test)
 let g:projectionist_heuristics = {
@@ -187,11 +178,6 @@ nmap <silent> <leader>tf :TestFile<CR>
 nmap <silent> <leader>ts :TestSuite<CR>
 nmap <silent> <leader>tl :TestLast<CR>
 nmap <silent> <leader>tv :TestVisit<CR>
-
-" =============================================================================
-" Pretty fonts and icons
-" =============================================================================
-set guifont=Font\ Awesome\ 14
 
 " Enable folding via CoC (much faster than indent)
 set foldmethod=manual

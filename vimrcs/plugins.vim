@@ -1,10 +1,4 @@
-""""""""""""""""""""""""""""""
-" => Load pathogen paths
-""""""""""""""""""""""""""""""
-let s:vim_runtime = expand('<sfile>:p:h')."/.."
-exe 'source ' . s:vim_runtime . '/autoload/pathogen.vim'
-call pathogen#infect(s:vim_runtime.'/plugins/{}')
-call pathogen#helptags()
+" Pathogen loading is done in ~/.vimrc — this file only configures plugins
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Nerd Tree
@@ -35,12 +29,12 @@ let g:lightline = {
       \ 'component': {
       \   'readonly': '%{&filetype=="help"?"":&readonly?"🔒":""}',
       \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
-      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
+      \   'fugitive': '%{exists("*FugitiveHead")?FugitiveHead():""}'
       \ },
       \ 'component_visible_condition': {
       \   'readonly': '(&filetype!="help"&& &readonly)',
       \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
-      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+      \   'fugitive': '(exists("*FugitiveHead") && ""!=FugitiveHead())'
       \ },
       \ 'separator': { 'left': ' ', 'right': ' ' },
       \ 'subseparator': { 'left': ' ', 'right': ' ' }

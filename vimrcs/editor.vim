@@ -80,9 +80,7 @@ function! VisualSelection(direction, extra_filter) range
     let l:pattern = escape(@", "\\/.*'$^~[]")
     let l:pattern = substitute(l:pattern, "\n$", "", "")
 
-    if a:direction == 'gv'
-        call CmdLine("Ack '" . l:pattern . "' " )
-    elseif a:direction == 'replace'
+    if a:direction == 'replace'
         call CmdLine("%s" . '/'. l:pattern . '/')
     endif
 

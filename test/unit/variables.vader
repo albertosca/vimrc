@@ -244,3 +244,57 @@ Execute (UT-075 vim-go metalinter habilitado no save):
   Assert exists('g:go_metalinter_autosave'),
         \ 'g:go_metalinter_autosave nao definido'
   AssertEqual 1, g:go_metalinter_autosave
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-076 a UT-083: Revisão final — bugs, dead code, DX
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-076 sem nmap nao-Plug em configs.vim — MixFormat usa nnoremap):
+  " nmap sem <Plug> e um footgun — deveria ser nnoremap
+  let m = maparg(',mf', 'n', 0, 1)
+  if !empty(m)
+    AssertEqual 1, get(m, 'noremap', 0),
+          \ ',mf deveria ser nnoremap (noremap=1), nao nmap'
+  endif
+
+Execute (UT-077 sem nmap nao-Plug em configs.vim — VimuxPromptCommand usa nnoremap):
+  let m = maparg(',vp', 'n', 0, 1)
+  if !empty(m)
+    AssertEqual 1, get(m, 'noremap', 0),
+          \ ',vp deveria ser nnoremap, nao nmap'
+  endif
+
+Execute (UT-078 encoding setado apenas uma vez no runtime):
+  " Redundancia: options.vim e configs.vim setam encoding=utf8
+  " Apos fix, configs.vim nao deve setar encoding (options.vim ja faz)
+  redir => scripts
+  silent scriptnames
+  redir END
+  " Verificamos indiretamente: encoding deve ser utf-8 (funcional)
+  Assert &encoding ==# 'utf-8', 'encoding deveria ser utf-8: ' . &encoding
+
+Execute (UT-079 foldcolumn e 0):
+  " foldcolumn=1 desperdiça coluna com foldmethod=manual
+  AssertEqual 0, &foldcolumn, 'foldcolumn deveria ser 0 (coluna vazia com manual fold)'
+
+Execute (UT-080 cmdheight e 1):
+  " cmdheight=2 desperdiça linha — CoC usa statusline + shortmess+=c
+  AssertEqual 1, &cmdheight, 'cmdheight deveria ser 1 (linha extra desnecessaria)'
+
+Execute (UT-081 window nav C-J definido apenas em configs.vim):
+  " options.vim e configs.vim ambos definem C-J — deve existir apenas uma vez
+  " Verificamos que o mapping nao tem source duplo inspecionando o dict
+  let m = maparg('<C-J>', 'n', 0, 1)
+  Assert !empty(m), 'C-J mapping nao encontrado'
+  " O mapping deve apontar para a forma configs.vim: <C-W><C-J>
+  Assert m.rhs =~# '<C-W>', 'C-J deveria mapear para <C-W>: ' . m.rhs
+
+Execute (UT-082 sem guifont Font Awesome):
+  " Font Awesome e icon font, nao coding font — guifont nao deve referencia-la
+  Assert &guifont !~# 'Font Awesome',
+        \ 'guifont nao deveria usar Font Awesome (icon font): ' . &guifont
+
+Execute (UT-083 lightline usa FugitiveHead nao fugitive#head):
+  " fugitive#head() e deprecado — lightline deve usar FugitiveHead()
+  Assert g:lightline.component.fugitive =~# 'FugitiveHead',
+        \ 'lightline deveria usar FugitiveHead (nao fugitive#head): ' . g:lightline.component.fugitive

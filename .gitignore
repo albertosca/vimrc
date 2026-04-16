@@ -13,6 +13,9 @@ erl_crash.dump
 # Tags
 tags
 
+# Database queries (may contain connection strings with passwords)
+db_queries/
+
 # Test isolation
 test/xdg/
 test/node/node_modules/

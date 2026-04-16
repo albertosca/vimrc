@@ -11,7 +11,7 @@ vimrcs/
   filetypes.vim          ← detecção de filetype e indent por linguagem
   plugins.vim            ← carregamento do Pathogen + config de plugins terceiros
   editor.vim             ← undo persistente, GUI, helpers, VisualSelection
-plugins/                 ← 45 plugins (gerenciados por Pathogen, NÃO vim-plug/lazy)
+plugins/                 ← 47 plugins (gerenciados por Pathogen, NÃO vim-plug/lazy)
 autoload/pathogen.vim    ← plugin manager
 colors/                  ← colorschemes extras (gruvbox é o ativo, vive em plugins/)
 test/                    ← suite de testes (vader, jest, shell) — ver docs/test_plan.md
@@ -66,7 +66,7 @@ bash test/run.sh unit     # só uma suite (unit, integration, e2e, json, shell)
 ## LSP
 
 - CoC.nvim é o LSP client — `~/.vim/coc-settings.json` (fora deste repo)
-- 21 extensões CoC listadas em `g:coc_global_extensions` no configs.vim
+- 22 extensões CoC listadas em `g:coc_global_extensions` no configs.vim
 - Fixture para CI em `test/fixtures/coc-settings.json`
 
 ## O que NÃO fazer

@@ -78,8 +78,8 @@ endif
 "Always show current position
 set ruler
 
-" Height of the command bar
-set cmdheight=2
+" Height of the command bar (CoC uses statusline + shortmess+=c)
+set cmdheight=1
 
 " A buffer becomes hidden when it is abandoned
 set hid
@@ -123,8 +123,8 @@ if has("gui_macvim")
 endif
 
 
-" Add a bit extra margin to the left
-set foldcolumn=1
+" foldcolumn=0: no margin (foldmethod=manual makes it always empty)
+set foldcolumn=0
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -254,11 +254,8 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 """"""""""""""""""""""""""""""
 " => Status line
 """"""""""""""""""""""""""""""
-" Always show the status line
+" Always show the status line (lightline handles the format, CoC prepends status)
 set laststatus=2
-
-" Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -290,7 +287,7 @@ fun! CleanExtraSpaces()
 endfun
 
 if has("autocmd")
-    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh :call CleanExtraSpaces()
 endif
 
 
@@ -354,23 +351,4 @@ function! <SID>BufcloseCloseIt()
     endif
 endfunction
 
-function! CmdLine(str)
-    call feedkeys(":" . a:str)
-endfunction
-
-function! VisualSelection(direction, extra_filter) range
-    let l:saved_reg = @"
-    execute "normal! vgvy"
-
-    let l:pattern = escape(@", "\\/.*'$^~[]")
-    let l:pattern = substitute(l:pattern, "\n$", "", "")
-
-    if a:direction == 'gv'
-        call CmdLine("Ack '" . l:pattern . "' " )
-    elseif a:direction == 'replace'
-        call CmdLine("%s" . '/'. l:pattern . '/')
-    endif
-
-    let @/ = l:pattern
-    let @" = l:saved_reg
-endfunction
+" CmdLine() and VisualSelection() are defined in editor.vim
