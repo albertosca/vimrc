@@ -108,9 +108,9 @@ Execute (IT-054 gr mapeado para tabprev):
   let m = maparg('gr', 'n')
   Assert m =~# 'tabprev', 'gr nao mapeia para tabprev: ' . m
 
-Execute (IT-055 leader-fr mapeado para MRU):
-  let m = maparg(',fr', 'n')
-  Assert m =~# 'MRU', ',fr nao mapeia para MRU: ' . m
+Execute (IT-055 leader-ht mapeado para History):
+  let m = maparg(',ht', 'n')
+  Assert m =~# 'History', ',ht nao mapeia para History: ' . m
 
 " ─────────────────────────────────────────────────────────────────────────────
 " IT-056 a IT-058: Ausência de conflitos históricos
@@ -164,3 +164,76 @@ Execute (IT-090 C-b normal mode resolve para Buffers e nao coc float):
   let m = maparg('<C-b>', 'n')
   Assert m =~# 'Buffers', '<C-b> nao resolve para Buffers em normal mode: ' . m
   Assert m !~# 'coc#float', '<C-b> resolve para coc#float em normal mode — conflito!'
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-091 a IT-103: Refactor — conflitos e mapeamentos mortos removidos
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-091 gv em visual mode NAO sombra o nativo):
+  " extended.vim tinha vnoremap gv → VisualSelection/Ack que sombrava gv nativo
+  let m = maparg('gv', 'v')
+  Assert m !~# 'Ack\|VisualSelection',
+        \ 'gv visual sombra o gv nativo (reselect): ' . m
+
+Execute (IT-092 C-p em normal NAO mapeia para yankstack):
+  " YankStack removido — C-p fica livre para auto-pairs toggle
+  let m = maparg('<C-p>', 'n')
+  Assert m !~# 'yankstack', 'C-p ainda mapeia para yankstack: ' . m
+
+Execute (IT-093 C-n em normal NAO mapeia para yankstack):
+  let m = maparg('<C-n>', 'n')
+  Assert m !~# 'yankstack', 'C-n ainda mapeia para yankstack: ' . m
+
+Execute (IT-094 space NAO tem mapeamento direto em normal):
+  " map <space> / removido — <space> livre como prefixo para CocList
+  let m = maparg('<space>', 'n')
+  Assert empty(m), '<space> tem mapeamento direto (deveria estar livre): ' . m
+
+Execute (IT-095 c-space NAO mapeia para busca reversa em normal):
+  " map <c-space> ? removido
+  let m = maparg('<c-space>', 'n')
+  Assert empty(m) || m !~# '?',
+        \ 'c-space mapeia para ? em normal mode: ' . m
+
+Execute (IT-096 leader-o NAO mapeia para BufExplorer):
+  " BufExplorer removido
+  let m = maparg(',o', 'n')
+  Assert empty(m) || m !~# 'BufExplorer',
+        \ ',o ainda mapeia para BufExplorer: ' . m
+
+Execute (IT-097 leader-fr NAO mapeia para MRU):
+  " MRU removido — fzf :History substitui via ,ht
+  let m = maparg(',fr', 'n')
+  Assert empty(m) || m !~# 'MRU',
+        \ ',fr ainda mapeia para MRU: ' . m
+
+Execute (IT-098 leader-n NAO mapeia para cn):
+  " :cn removido — vim-unimpaired ]q faz o mesmo
+  let m = maparg(',n', 'n')
+  Assert empty(m) || m !~# ':cn',
+        \ ',n ainda mapeia para :cn: ' . m
+
+Execute (IT-099 leader-p NAO mapeia para cp):
+  " :cp removido — vim-unimpaired [q faz o mesmo
+  let m = maparg(',p', 'n')
+  Assert empty(m) || m !~# ':cp',
+        \ ',p ainda mapeia para :cp: ' . m
+
+Execute (IT-100 leader-g NAO mapeia para Ack):
+  " Ack removido — fzf :Rg substitui
+  let m = maparg(',g', 'n')
+  Assert empty(m) || m !~# 'Ack',
+        \ ',g ainda mapeia para Ack: ' . m
+
+Execute (IT-101 leader-bd usa nnoremap sem mapping visual):
+  " map → nnoremap: nao deve existir em visual mode
+  let m = maparg(',bd', 'v')
+  Assert empty(m), ',bd nao deveria existir em visual mode (map→nnoremap): ' . m
+
+Execute (IT-102 leader-ba usa nnoremap sem mapping visual):
+  let m = maparg(',ba', 'v')
+  Assert empty(m), ',ba nao deveria existir em visual mode (map→nnoremap): ' . m
+
+Execute (IT-103 leader-ss usa nnoremap sem mapping visual):
+  let m = maparg(',ss', 'v')
+  Assert empty(m), ',ss nao deveria existir em visual mode (map→nnoremap): ' . m

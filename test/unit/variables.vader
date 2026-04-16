@@ -145,3 +145,69 @@ Execute (UT-060 FZF_DEFAULT_COMMAND usa rg quando disponivel):
     Assert $FZF_DEFAULT_COMMAND =~# 'rg',
           \ 'rg disponivel mas FZF_DEFAULT_COMMAND nao usa rg: ' . $FZF_DEFAULT_COMMAND
   endif
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-061 a UT-070: Refactor — variáveis, opções e mapeamentos limpos
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-061 hlsearch nao muda com re-source de my_configs):
+  " BUG-1: set hlsearch! é toggle — re-source inverte o valor
+  let before = &hlsearch
+  source ~/.vim_runtime/my_configs.vim
+  AssertEqual before, &hlsearch, 'hlsearch mudou apos re-source (set hlsearch! e toggle)'
+
+Execute (UT-062 sem insert-mode mapping para tabmove):
+  " BUG-2: inoremap <C-S-h> :tabmove insere texto literal
+  redir => imaps
+  silent imap
+  redir END
+  Assert imaps !~# 'tabmove', 'encontrado mapping de tabmove em insert mode (quebrado no terminal)'
+
+Execute (UT-063 grepprg usa rg quando disponivel):
+  " MEL-1: grepprg deveria usar ripgrep, nao /bin/grep
+  if executable('rg')
+    Assert &grepprg =~# 'rg', 'grepprg deveria usar rg: ' . &grepprg
+  endif
+
+Execute (UT-064 g:airline_powerline_fonts NAO definido):
+  " Airline nao esta instalado (lightline e o statusline ativo)
+  Assert !exists('g:airline_powerline_fonts'),
+        \ 'airline nao instalado — g:airline_powerline_fonts deveria ser removido'
+
+Execute (UT-065 variaveis syntastic NAO definidas):
+  " Syntastic nao esta instalado (CoC faz tudo via LSP)
+  Assert !exists('g:syntastic_check_on_open'),
+        \ 'syntastic nao instalado — g:syntastic_check_on_open deveria ser removido'
+  Assert !exists('g:syntastic_check_on_wq'),
+        \ 'g:syntastic_check_on_wq deveria ser removido'
+  Assert !exists('g:syntastic_javascript_checkers'),
+        \ 'g:syntastic_javascript_checkers deveria ser removido'
+
+Execute (UT-066 g:user_zen_mode NAO definido):
+  " ZenCoding obsoleto — coc-emmet e o substituto
+  Assert !exists('g:user_zen_mode'),
+        \ 'ZenCoding obsoleto — g:user_zen_mode deveria ser removido'
+
+Execute (UT-067 g:Grep_Skip_Dirs NAO definido):
+  " grep.vim nao esta instalado — variavel orfã
+  Assert !exists('g:Grep_Skip_Dirs'),
+        \ 'grep.vim nao instalado — Grep_Skip_Dirs deveria ser removido'
+
+Execute (UT-068 sem inoremap dollar-1 e dollar-q):
+  " $1/$q em insert mode sao do boilerplate — vim-surround e auto-pairs substituem
+  let m1 = maparg('$1', 'i')
+  let mq = maparg('$q', 'i')
+  Assert empty(m1), 'inoremap $1 deveria ter sido removido: ' . m1
+  Assert empty(mq), 'inoremap $q deveria ter sido removido: ' . mq
+
+Execute (UT-069 sem mapeamento half-symbol):
+  " map ½ $ e do boilerplate escandinavo — irrelevante no teclado BR
+  let m = maparg('½', 'n')
+  Assert empty(m), 'map ½ (teclado escandinavo) deveria ter sido removido: ' . m
+
+Execute (UT-070 sem vnoremap dollar-1 e dollar-q):
+  " vnoremap $1/$q sao do boilerplate — vim-surround ja faz wrapping
+  let m1 = maparg('$1', 'v')
+  let mq = maparg('$q', 'v')
+  Assert empty(m1), 'vnoremap $1 deveria ter sido removido: ' . m1
+  Assert empty(mq), 'vnoremap $q deveria ter sido removido: ' . mq

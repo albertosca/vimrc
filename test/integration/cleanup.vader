@@ -1,0 +1,64 @@
+" IT-110 a IT-115: Plugins removidos, adicionados e mantidos
+"
+" Estes testes garantem que o refactor de limpeza:
+" - removeu os 17 plugins mortos do runtimepath
+" - adicionou vim-visual-multi como substituto do vim-multiple-cursors
+" - manteve vim-go e rust.vim (linguagens desejadas)
+" - colorscheme ativo é gruvbox (não desert/peaksea dos layers anteriores)
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-110: Plugins removidos não estão no runtimepath
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-110 plugins removidos nao estao no runtimepath):
+  let removed = [
+        \ 'ctrlp.vim', 'comfortable-motion.vim', 'ack.vim',
+        \ 'vim-coffee-script', 'vim-bundle-mako', 'vim-pug', 'vim-less',
+        \ 'vim-pyte', 'vim-colors-solarized', 'vim-codeclimate',
+        \ 'vim-zenroom2', 'open_file_under_cursor.vim', 'bufexplorer',
+        \ 'mru.vim', 'nginx.vim', 'vim-multiple-cursors', 'vim-yankstack']
+  for plugin in removed
+    Assert &rtp !~# 'my_plugins/' . escape(plugin, '.'),
+          \ 'plugin removido ainda no rtp: ' . plugin
+  endfor
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-111: Comandos de plugins removidos não existem
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-111 comandos de plugins removidos nao existem):
+  " exists(':Cmd') retorna 2 se existe, 0 se nao
+  Assert exists(':CtrlP') == 0, 'comando :CtrlP ainda existe'
+  Assert exists(':Ack') == 0, 'comando :Ack ainda existe'
+  Assert exists(':BufExplorer') == 0, 'comando :BufExplorer ainda existe'
+  Assert exists(':MRU') == 0, 'comando :MRU ainda existe'
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-112: vim-visual-multi presente (substituto de vim-multiple-cursors)
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-112 vim-visual-multi presente no runtimepath):
+  Assert &rtp =~# 'vim-visual-multi',
+        \ 'vim-visual-multi nao encontrado no rtp'
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-113 a IT-114: Plugins mantidos — Go e Rust
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-113 vim-go mantido no runtimepath):
+  Assert &rtp =~# 'vim-go',
+        \ 'vim-go deveria permanecer no rtp'
+
+Execute (IT-114 rust.vim mantido no runtimepath):
+  Assert &rtp =~# 'rust\.vim',
+        \ 'rust.vim deveria permanecer no rtp'
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-115: Colorscheme ativo
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-115 colorscheme ativo e gruvbox):
+  " basic.vim → desert, extended.vim → peaksea, my_configs.vim → gruvbox
+  " Após limpar os layers anteriores, gruvbox deve ser o ativo
+  AssertEqual 'gruvbox', get(g:, 'colors_name', ''),
+        \ 'colorscheme ativo nao e gruvbox: ' . get(g:, 'colors_name', 'NONE')

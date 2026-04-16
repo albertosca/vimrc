@@ -41,6 +41,67 @@ Execute (IT-078 CursorHold chama CocActionAsync highlight):
 " IT-088: GitMessenger cria popup em arquivo rastreado pelo git
 " ─────────────────────────────────────────────────────────────────────────────
 
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-104 a IT-109: Refactor — autocmds limpos e novos
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-104 re-source de my_configs nao duplica autocmds BufWritePre):
+  " BUG-3: autocmds sem augroup acumulam a cada re-source
+  redir => before_raw
+  silent autocmd BufWritePre
+  redir END
+  let before = len(filter(split(before_raw, "\n"), 'v:val =~# "\\S"'))
+  source ~/.vim_runtime/my_configs.vim
+  redir => after_raw
+  silent autocmd BufWritePre
+  redir END
+  let after = len(filter(split(after_raw, "\n"), 'v:val =~# "\\S"'))
+  AssertEqual before, after, 'autocmds BufWritePre duplicados apos re-source'
+
+Execute (IT-105 sem autocmd CoffeeScript):
+  " vim-coffee-script removido
+  redir => autocmds
+  silent autocmd FileType coffee
+  redir END
+  Assert autocmds !~# 'CoffeeScriptFold',
+        \ 'autocmd CoffeeScript deveria ter sido removido'
+
+Execute (IT-106 sem autocmd CSS omnifunc):
+  " coc-css faz completion — omnifunc legado removido
+  redir => autocmds
+  silent autocmd FileType css
+  redir END
+  Assert autocmds !~# 'csscomplete',
+        \ 'autocmd CSS omnifunc deveria ter sido removido'
+
+Execute (IT-107 sem autocmd Python dollar shortcuts):
+  " CoC + Pyright fazem snippets — $r/$i/$p removidos
+  redir => autocmds
+  silent autocmd FileType python
+  redir END
+  Assert autocmds !~# '\$r ',
+        \ 'autocmd Python $r deveria ter sido removido'
+
+Execute (IT-108 sem autocmd JavaScript C-t log insert):
+  " CoC + snippets substituem — <C-t> $log removido
+  redir => autocmds
+  silent autocmd FileType javascript
+  redir END
+  Assert autocmds !~# '\$log\|alert();',
+        \ 'autocmd JS $log/$alert deveria ter sido removido'
+
+Execute (IT-109 undodir cleanup autocmd existe):
+  " MEL-9: limpa arquivos de undo com mais de 90 dias
+  redir => autocmds
+  silent autocmd VimEnter
+  redir END
+  Assert autocmds =~# 'undodir\|UndoCleanup',
+        \ 'autocmd de cleanup do undodir deveria existir'
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-088: GitMessenger cria popup em arquivo rastreado pelo git
+" ─────────────────────────────────────────────────────────────────────────────
+
 Execute (IT-088 GitMessenger cria popup em arquivo rastreado pelo git):
   " Usa o proprio my_configs.vim que esta em repositorio git
   let target = expand('~/.vim_runtime/my_configs.vim')
