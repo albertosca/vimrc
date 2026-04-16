@@ -18,7 +18,7 @@ Execute (IT-110 plugins removidos nao estao no runtimepath):
         \ 'vim-zenroom2', 'open_file_under_cursor.vim', 'bufexplorer',
         \ 'mru.vim', 'nginx.vim', 'vim-multiple-cursors', 'vim-yankstack']
   for plugin in removed
-    Assert &rtp !~# 'my_plugins/' . escape(plugin, '.'),
+    Assert &rtp !~# 'plugins/' . escape(plugin, '.'),
           \ 'plugin removido ainda no rtp: ' . plugin
   endfor
 
@@ -58,7 +58,7 @@ Execute (IT-114 rust.vim mantido no runtimepath):
 " ─────────────────────────────────────────────────────────────────────────────
 
 Execute (IT-115 colorscheme ativo e gruvbox):
-  " basic.vim → desert, extended.vim → peaksea, my_configs.vim → gruvbox
+  " options.vim → desert, editor.vim → peaksea, configs.vim → gruvbox
   " Após limpar os layers anteriores, gruvbox deve ser o ativo
   AssertEqual 'gruvbox', get(g:, 'colors_name', ''),
         \ 'colorscheme ativo nao e gruvbox: ' . get(g:, 'colors_name', 'NONE')

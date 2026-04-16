@@ -14,9 +14,9 @@ Execute (IT-028 Pathogen carregou plugins sem E492):
   let msgs = execute('messages')
   Assert msgs !~# 'E492', 'E492 (comando desconhecido) encontrado nos messages'
 
-Execute (IT-029 my_configs.vim foi sourced — variaveis globais presentes):
-  " Se my_configs.vim foi sourced, g:rooter_patterns estara definido
-  Assert exists('g:rooter_patterns'), 'g:rooter_patterns nao definido — my_configs nao foi sourced'
+Execute (IT-029 configs.vim foi sourced — variaveis globais presentes):
+  " Se configs.vim foi sourced, g:rooter_patterns estara definido
+  Assert exists('g:rooter_patterns'), 'g:rooter_patterns nao definido — configs nao foi sourced'
   Assert exists('g:coc_global_extensions'), 'g:coc_global_extensions nao definido'
 
 " ─────────────────────────────────────────────────────────────────────────────

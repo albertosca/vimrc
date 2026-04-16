@@ -4,7 +4,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-PLUGINS="$REPO_ROOT/my_plugins"
+PLUGINS="$REPO_ROOT/plugins"
 PASS=0; FAIL=0; WARN=0
 
 pass() { echo "  PASS  $1"; PASS=$((PASS + 1)); }
@@ -102,7 +102,7 @@ fi
 if [ -f "$PLUGINS/coc.nvim/build/index.js" ] && [ -s "$PLUGINS/coc.nvim/build/index.js" ]; then
   pass "[coc.nvim] build/index.js presente e não vazio"
 else
-  fail "[coc.nvim] build/index.js ausente ou vazio — rode: cd my_plugins/coc.nvim && npm ci"
+  fail "[coc.nvim] build/index.js ausente ou vazio — rode: cd plugins/coc.nvim && npm ci"
 fi
 
 # ── IT-015 a IT-020: Binários externos obrigatórios ───────────────────────────

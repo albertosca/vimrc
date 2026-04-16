@@ -1,17 +1,18 @@
+# Persistent undo files (managed by Vim, cleaned automatically after 90 days)
 temp_dirs/undodir/*
-sources_non_forked/ack.vim/.netrwhist
-temp_dirs/yankring_history_v2.txt
-sources_forked/yankring/doc/tags
-sources_non_forked/tlib/doc/tags
-sources_non_forked/ctrlp.vim/doc/tags*
-# my_plugins/
-# my_configs.vim
-tags
+!temp_dirs/undodir/.gitignore
+!temp_dirs/undodir/README.md
+
+# OS
 .DS_Store
-# Erlang/Elixir crash dumps gerados pelo runtime
+
+# Erlang/Elixir crash dumps
 erl_crash.dump
 **/erl_crash.dump
-# Diretório de isolamento XDG usado pelos testes
+
+# Tags
+tags
+
+# Test isolation
 test/xdg/
-# Dependências Node.js dos testes Jest
 test/node/node_modules/

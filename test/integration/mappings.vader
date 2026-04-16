@@ -170,7 +170,7 @@ Execute (IT-090 C-b normal mode resolve para Buffers e nao coc float):
 " ─────────────────────────────────────────────────────────────────────────────
 
 Execute (IT-091 gv em visual mode NAO sombra o nativo):
-  " extended.vim tinha vnoremap gv → VisualSelection/Ack que sombrava gv nativo
+  " editor.vim tinha vnoremap gv → VisualSelection/Ack que sombrava gv nativo
   let m = maparg('gv', 'v')
   Assert m !~# 'Ack\|VisualSelection',
         \ 'gv visual sombra o gv nativo (reselect): ' . m

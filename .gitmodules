@@ -8,137 +8,137 @@
 	url = https://github.com/junegunn/vader.vim
 	ignore = dirty
 
-[submodule "my_plugins/coc.nvim"]
-	path = my_plugins/coc.nvim
+[submodule "plugins/coc.nvim"]
+	path = plugins/coc.nvim
 	url = https://github.com/neoclide/coc.nvim
 	ignore = dirty
 
-[submodule "my_plugins/fzf"]
-	path = my_plugins/fzf
+[submodule "plugins/fzf"]
+	path = plugins/fzf
 	url = https://github.com/junegunn/fzf
 	ignore = dirty
 
-[submodule "my_plugins/fzf.vim"]
-	path = my_plugins/fzf.vim
+[submodule "plugins/fzf.vim"]
+	path = plugins/fzf.vim
 	url = https://github.com/junegunn/fzf.vim
 	ignore = dirty
 
-[submodule "my_plugins/gv.vim"]
-	path = my_plugins/gv.vim
+[submodule "plugins/gv.vim"]
+	path = plugins/gv.vim
 	url = https://github.com/junegunn/gv.vim
 	ignore = dirty
 
-[submodule "my_plugins/undotree"]
-	path = my_plugins/undotree
+[submodule "plugins/undotree"]
+	path = plugins/undotree
 	url = https://github.com/mbbill/undotree
 	ignore = dirty
 
-[submodule "my_plugins/vim-closetag"]
-	path = my_plugins/vim-closetag
+[submodule "plugins/vim-closetag"]
+	path = plugins/vim-closetag
 	url = https://github.com/alvan/vim-closetag
 	ignore = dirty
 
-[submodule "my_plugins/vim-dadbod"]
-	path = my_plugins/vim-dadbod
+[submodule "plugins/vim-dadbod"]
+	path = plugins/vim-dadbod
 	url = https://github.com/tpope/vim-dadbod
 	ignore = dirty
 
-[submodule "my_plugins/vim-dadbod-completion"]
-	path = my_plugins/vim-dadbod-completion
+[submodule "plugins/vim-dadbod-completion"]
+	path = plugins/vim-dadbod-completion
 	url = https://github.com/kristijanhusak/vim-dadbod-completion
 	ignore = dirty
 
-[submodule "my_plugins/vim-dadbod-ui"]
-	path = my_plugins/vim-dadbod-ui
+[submodule "plugins/vim-dadbod-ui"]
+	path = plugins/vim-dadbod-ui
 	url = https://github.com/kristijanhusak/vim-dadbod-ui
 	ignore = dirty
 
-[submodule "my_plugins/vim-devicons"]
-	path = my_plugins/vim-devicons
+[submodule "plugins/vim-devicons"]
+	path = plugins/vim-devicons
 	url = https://github.com/ryanoasis/vim-devicons
 	ignore = dirty
 
-[submodule "my_plugins/vim-elixir"]
-	path = my_plugins/vim-elixir
+[submodule "plugins/vim-elixir"]
+	path = plugins/vim-elixir
 	url = https://github.com/elixir-editors/vim-elixir
 	ignore = dirty
 
-[submodule "my_plugins/vim-endwise"]
-	path = my_plugins/vim-endwise
+[submodule "plugins/vim-endwise"]
+	path = plugins/vim-endwise
 	url = https://github.com/tpope/vim-endwise
 	ignore = dirty
 
-[submodule "my_plugins/vim-js-pretty-template"]
-	path = my_plugins/vim-js-pretty-template
+[submodule "plugins/vim-js-pretty-template"]
+	path = plugins/vim-js-pretty-template
 	url = https://github.com/Quramy/vim-js-pretty-template
 	ignore = dirty
 
-[submodule "my_plugins/vim-jsx-improve"]
-	path = my_plugins/vim-jsx-improve
+[submodule "plugins/vim-jsx-improve"]
+	path = plugins/vim-jsx-improve
 	url = https://github.com/neoclide/vim-jsx-improve
 	ignore = dirty
 
-[submodule "my_plugins/vim-mdx-js"]
-	path = my_plugins/vim-mdx-js
+[submodule "plugins/vim-mdx-js"]
+	path = plugins/vim-mdx-js
 	url = https://github.com/jxnblk/vim-mdx-js
 	ignore = dirty
 
-[submodule "my_plugins/vim-mix-format"]
-	path = my_plugins/vim-mix-format
+[submodule "plugins/vim-mix-format"]
+	path = plugins/vim-mix-format
 	url = https://github.com/mhinz/vim-mix-format
 	ignore = dirty
 
-[submodule "my_plugins/vim-nerdtree-syntax-highlight"]
-	path = my_plugins/vim-nerdtree-syntax-highlight
+[submodule "plugins/vim-nerdtree-syntax-highlight"]
+	path = plugins/vim-nerdtree-syntax-highlight
 	url = https://github.com/tiagofumo/vim-nerdtree-syntax-highlight
 	ignore = dirty
 
-[submodule "my_plugins/vim-obsession"]
-	path = my_plugins/vim-obsession
+[submodule "plugins/vim-obsession"]
+	path = plugins/vim-obsession
 	url = https://github.com/tpope/vim-obsession
 	ignore = dirty
 
-[submodule "my_plugins/vim-projectionist"]
-	path = my_plugins/vim-projectionist
+[submodule "plugins/vim-projectionist"]
+	path = plugins/vim-projectionist
 	url = https://github.com/tpope/vim-projectionist
 	ignore = dirty
 
-[submodule "my_plugins/vim-rails"]
-	path = my_plugins/vim-rails
+[submodule "plugins/vim-rails"]
+	path = plugins/vim-rails
 	url = https://github.com/tpope/vim-rails
 	ignore = dirty
 
-[submodule "my_plugins/vim-rooter"]
-	path = my_plugins/vim-rooter
+[submodule "plugins/vim-rooter"]
+	path = plugins/vim-rooter
 	url = https://github.com/airblade/vim-rooter
 	ignore = dirty
 
-[submodule "my_plugins/vim-snippets"]
-	path = my_plugins/vim-snippets
+[submodule "plugins/vim-snippets"]
+	path = plugins/vim-snippets
 	url = https://github.com/honza/vim-snippets
 	ignore = dirty
 
-[submodule "my_plugins/vim-test"]
-	path = my_plugins/vim-test
+[submodule "plugins/vim-test"]
+	path = plugins/vim-test
 	url = https://github.com/vim-test/vim-test
 	ignore = dirty
 
-[submodule "my_plugins/vim-unimpaired"]
-	path = my_plugins/vim-unimpaired
+[submodule "plugins/vim-unimpaired"]
+	path = plugins/vim-unimpaired
 	url = https://github.com/tpope/vim-unimpaired
 	ignore = dirty
 
-[submodule "my_plugins/vimix"]
-	path = my_plugins/vimix
+[submodule "plugins/vimix"]
+	path = plugins/vimix
 	url = https://github.com/mike-hearn/vim-vimix
 	ignore = dirty
 
-[submodule "my_plugins/vimux"]
-	path = my_plugins/vimux
+[submodule "plugins/vimux"]
+	path = plugins/vimux
 	url = https://github.com/preservim/vimux
 	ignore = dirty
 
-[submodule "my_plugins/vim-visual-multi"]
-	path = my_plugins/vim-visual-multi
+[submodule "plugins/vim-visual-multi"]
+	path = plugins/vim-visual-multi
 	url = https://github.com/mg979/vim-visual-multi
 	ignore = dirty

@@ -138,7 +138,7 @@ if $COLORTERM == 'gnome-terminal'
     set t_Co=256
 endif
 
-" colorscheme is set in my_configs.vim (gruvbox)
+" colorscheme is set in configs.vim (gruvbox)
 set background=dark
 
 " Set extra options when running in GUI mode
@@ -199,7 +199,7 @@ vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" <Space> is free as prefix for CocList mappings (see my_configs.vim)
+" <Space> is free as prefix for CocList mappings (see configs.vim)
 " Search is available via native / and ? keys
 
 " Disable highlight when <leader><cr> is pressed

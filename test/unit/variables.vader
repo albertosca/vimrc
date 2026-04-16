@@ -150,10 +150,10 @@ Execute (UT-060 FZF_DEFAULT_COMMAND usa rg quando disponivel):
 " UT-061 a UT-070: Refactor — variáveis, opções e mapeamentos limpos
 " ─────────────────────────────────────────────────────────────────────────────
 
-Execute (UT-061 hlsearch nao muda com re-source de my_configs):
+Execute (UT-061 hlsearch nao muda com re-source de configs):
   " BUG-1: set hlsearch! é toggle — re-source inverte o valor
   let before = &hlsearch
-  source ~/.vim_runtime/my_configs.vim
+  source ~/.vim_runtime/configs.vim
   AssertEqual before, &hlsearch, 'hlsearch mudou apos re-source (set hlsearch! e toggle)'
 
 Execute (UT-062 sem insert-mode mapping para tabmove):

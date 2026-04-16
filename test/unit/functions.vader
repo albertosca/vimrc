@@ -43,13 +43,13 @@ Before:
   if !exists('g:configs_sid') || g:configs_sid == 0
     let g:configs_sid = 0
     for s:sline in split(execute('scriptnames'), "\n")
-      if s:sline =~# 'my_configs\.vim'
+      if s:sline =~# 'vim_runtime/configs\.vim'
         let g:configs_sid = str2nr(matchstr(s:sline, '^\s*\zs\d\+'))
         break
       endif
     endfor
   endif
-  Assert g:configs_sid > 0, 'my_configs.vim nao foi carregado'
+  Assert g:configs_sid > 0, 'configs.vim nao foi carregado'
 
 Execute (UT-023 GitMessenger retorna cedo em buffer sem arquivo):
   new

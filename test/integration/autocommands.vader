@@ -45,13 +45,13 @@ Execute (IT-078 CursorHold chama CocActionAsync highlight):
 " IT-104 a IT-109: Refactor — autocmds limpos e novos
 " ─────────────────────────────────────────────────────────────────────────────
 
-Execute (IT-104 re-source de my_configs nao duplica autocmds BufWritePre):
+Execute (IT-104 re-source de configs nao duplica autocmds BufWritePre):
   " BUG-3: autocmds sem augroup acumulam a cada re-source
   redir => before_raw
   silent autocmd BufWritePre
   redir END
   let before = len(filter(split(before_raw, "\n"), 'v:val =~# "\\S"'))
-  source ~/.vim_runtime/my_configs.vim
+  source ~/.vim_runtime/configs.vim
   redir => after_raw
   silent autocmd BufWritePre
   redir END
@@ -103,23 +103,23 @@ Execute (IT-109 undodir cleanup autocmd existe):
 " ─────────────────────────────────────────────────────────────────────────────
 
 Execute (IT-088 GitMessenger cria popup em arquivo rastreado pelo git):
-  " Usa o proprio my_configs.vim que esta em repositorio git
-  let target = expand('~/.vim_runtime/my_configs.vim')
+  " Usa o proprio configs.vim que esta em repositorio git
+  let target = expand('~/.vim_runtime/configs.vim')
   if !filereadable(target)
     " Pula graciosamente se o arquivo nao existir por alguma razao
     Assert 1, 'arquivo nao encontrado — pulando'
   else
     execute 'edit ' . target
     call cursor(1, 1)
-    " Obtém SID de my_configs.vim
+    " Obtém SID de configs.vim
     let sid = 0
     for sline in split(execute('scriptnames'), "\n")
-      if sline =~# 'my_configs\.vim'
+      if sline =~# 'vim_runtime/configs\.vim'
         let sid = str2nr(matchstr(sline, '^\s*\zs\d\+'))
         break
       endif
     endfor
-    Assert sid > 0, 'my_configs.vim SID nao encontrado'
+    Assert sid > 0, 'configs.vim SID nao encontrado'
     let GitMessenger = function('<SNR>' . sid . '_GitMessenger')
     let before = len(popup_list())
     call GitMessenger()

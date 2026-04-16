@@ -20,14 +20,14 @@ set guioptions-=R
 set guioptions-=l
 set guioptions-=L
 
-" colorscheme is set in my_configs.vim (gruvbox)
+" colorscheme is set in configs.vim (gruvbox)
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Fast editing and reloading of vimrc configs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <leader>e :e! ~/.vim_runtime/my_configs.vim<cr>
-autocmd! bufwritepost ~/.vim_runtime/my_configs.vim source ~/.vim_runtime/my_configs.vim
+nnoremap <leader>e :e! ~/.vim_runtime/configs.vim<cr>
+autocmd! bufwritepost ~/.vim_runtime/configs.vim source ~/.vim_runtime/configs.vim
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

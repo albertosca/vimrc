@@ -1,24 +1,24 @@
 " UT-001 a UT-016: s:SmartPair e s:SmartQuote
 " UT-053 a UT-054: s:ApplySmartOpenPairs
 "
-" Estratégia: obtém o SID do script my_configs.vim via :scriptnames
+" Estratégia: obtém o SID do script configs.vim via :scriptnames
 " e usa function('<SNR>N_FuncName') para chamar as funções script-locais.
 
 " ─────────────────────────────────────────────────────────────────────────────
-" Setup global: SID do my_configs.vim (calculado uma vez)
+" Setup global: SID do configs.vim (calculado uma vez)
 " ─────────────────────────────────────────────────────────────────────────────
 
 Before:
   if !exists('g:configs_sid') || g:configs_sid == 0
     let g:configs_sid = 0
     for s:sline in split(execute('scriptnames'), "\n")
-      if s:sline =~# 'my_configs\.vim'
+      if s:sline =~# 'vim_runtime/configs\.vim'
         let g:configs_sid = str2nr(matchstr(s:sline, '^\s*\zs\d\+'))
         break
       endif
     endfor
   endif
-  Assert g:configs_sid > 0, 'my_configs.vim nao foi carregado (SID nao encontrado)'
+  Assert g:configs_sid > 0, 'configs.vim nao foi carregado (SID nao encontrado)'
   let SmartPair  = function('<SNR>' . g:configs_sid . '_SmartPair')
   let SmartQuote = function('<SNR>' . g:configs_sid . '_SmartQuote')
 
