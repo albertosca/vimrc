@@ -141,3 +141,23 @@ Execute (IT-081 arquivo .heex tem shiftwidth 2 e expandtab):
   AssertEqual 1, &expandtab
 After:
   bdelete!
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-145 a IT-146: Filetypes para Go e Rust (novos no stack)
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-145 arquivo .go detectado como go):
+  new
+  silent! file /tmp/test_it145.go
+  filetype detect
+  AssertEqual 'go', &filetype
+After:
+  bdelete!
+
+Execute (IT-146 arquivo .rs detectado como rust):
+  new
+  silent! file /tmp/test_it146.rs
+  filetype detect
+  AssertEqual 'rust', &filetype
+After:
+  bdelete!

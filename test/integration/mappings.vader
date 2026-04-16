@@ -237,3 +237,77 @@ Execute (IT-102 leader-ba usa nnoremap sem mapping visual):
 Execute (IT-103 leader-ss usa nnoremap sem mapping visual):
   let m = maparg(',ss', 'v')
   Assert empty(m), ',ss nao deveria existir em visual mode (map→nnoremap): ' . m
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-127 a IT-144: Cobertura defensiva — mappings usados diariamente
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-127 leader-nn mapeado para NERDTreeToggle):
+  let m = maparg(',nn', 'n')
+  Assert m =~# 'NERDTreeToggle', ',nn nao mapeia para NERDTreeToggle: ' . m
+
+Execute (IT-128 leader-nf mapeado para NERDTreeFind):
+  let m = maparg(',nf', 'n')
+  Assert m =~# 'NERDTreeFind', ',nf nao mapeia para NERDTreeFind: ' . m
+
+Execute (IT-129 leader-gf mapeado para GFiles):
+  let m = maparg(',gf', 'n')
+  Assert m =~# 'GFiles', ',gf nao mapeia para GFiles: ' . m
+
+Execute (IT-130 leader-rg mapeado para Rg):
+  let m = maparg(',rg', 'n')
+  Assert m =~# 'Rg', ',rg nao mapeia para Rg: ' . m
+
+Execute (IT-131 leader-bl mapeado para BLines):
+  let m = maparg(',bl', 'n')
+  Assert m =~# 'BLines', ',bl nao mapeia para BLines: ' . m
+
+Execute (IT-132 leader-z mapeado para Goyo):
+  let m = maparg(',z', 'n')
+  Assert m =~# 'Goyo', ',z nao mapeia para Goyo: ' . m
+
+Execute (IT-133 leader-d mapeado para GitGutterToggle):
+  let m = maparg(',d', 'n')
+  Assert m =~# 'GitGutterToggle', ',d nao mapeia para GitGutterToggle: ' . m
+
+Execute (IT-134 leader-gV mapeado para GV!):
+  let m = maparg(',gV', 'n')
+  Assert m =~# 'GV!', ',gV nao mapeia para GV!: ' . m
+
+Execute (IT-135 leader-tv mapeado para TestVisit):
+  let m = maparg(',tv', 'n')
+  Assert m =~# 'TestVisit', ',tv nao mapeia para TestVisit: ' . m
+
+Execute (IT-136 leader-vp mapeado para VimuxPromptCommand):
+  let m = maparg(',vp', 'n')
+  Assert m =~# 'VimuxPromptCommand', ',vp nao mapeia para VimuxPromptCommand: ' . m
+
+Execute (IT-137 leader-e mapeado para configs.vim):
+  let m = maparg(',e', 'n')
+  Assert m =~# 'configs\.vim', ',e nao mapeia para configs.vim: ' . m
+
+Execute (IT-138 leader-mf mapeado para MixFormat):
+  let m = maparg(',mf', 'n')
+  Assert m =~# 'MixFormat', ',mf nao mapeia para MixFormat: ' . m
+
+Execute (IT-139 leader-lc mapeado para credo):
+  let m = maparg(',lc', 'n')
+  Assert m =~# 'credo', ',lc nao mapeia para credo: ' . m
+
+Execute (IT-140 space-a mapeado para CocList diagnostics):
+  let m = maparg('<space>a', 'n')
+  Assert m =~# 'CocList diagnostics', 'Space+a nao mapeia para CocList diagnostics: ' . m
+
+Execute (IT-141 space-o mapeado para CocList outline):
+  let m = maparg('<space>o', 'n')
+  Assert m =~# 'CocList outline', 'Space+o nao mapeia para CocList outline: ' . m
+
+Execute (IT-142 C-j insert mapeado para coc-snippets):
+  let m = maparg('<C-j>', 'i')
+  Assert m =~# 'coc-snippets', 'C-j insert nao mapeia para coc-snippets: ' . m
+
+Execute (IT-143 comando Format existe):
+  Assert exists(':Format') == 2, 'comando :Format nao existe'
+
+Execute (IT-144 comando OR existe):
+  Assert exists(':OR') == 2, 'comando :OR nao existe'

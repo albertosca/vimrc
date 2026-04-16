@@ -158,6 +158,35 @@ describe('IT-119: Ruby LSP (languageserver.ruby-lsp)', () => {
   });
 });
 
+// IT-149 — diagnostic signs configurados
+describe('IT-149: diagnostic signs', () => {
+  test('errorSign é ✖', () => {
+    expect(settings['diagnostic.errorSign']).toBe('✖');
+  });
+
+  test('warningSign é ⚠', () => {
+    expect(settings['diagnostic.warningSign']).toBe('⚠');
+  });
+});
+
+// IT-150 — suggest behavior
+describe('IT-150: suggest.noselect é false', () => {
+  test('noselect é false (primeiro item pre-selecionado)', () => {
+    expect(settings['suggest.noselect']).toBe(false);
+  });
+});
+
+// IT-151 — eslint.validate cobre todos os filetypes JS/TS
+describe('IT-151: eslint.validate', () => {
+  test('cobre javascript, javascriptreact, typescript, typescriptreact', () => {
+    const validate = settings['eslint.validate'];
+    expect(validate).toContain('javascript');
+    expect(validate).toContain('javascriptreact');
+    expect(validate).toContain('typescript');
+    expect(validate).toContain('typescriptreact');
+  });
+});
+
 // IT-120 — Inlay hints habilitados para Go, TS e Python
 describe('IT-120: Inlay hints habilitados', () => {
   test('Go inlay hints para parameter names', () => {

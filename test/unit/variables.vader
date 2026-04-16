@@ -298,3 +298,49 @@ Execute (UT-083 lightline usa FugitiveHead nao fugitive#head):
   " fugitive#head() e deprecado — lightline deve usar FugitiveHead()
   Assert g:lightline.component.fugitive =~# 'FugitiveHead',
         \ 'lightline deveria usar FugitiveHead (nao fugitive#head): ' . g:lightline.component.fugitive
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-084 a UT-094: Cobertura defensiva — opcoes e variaveis criticas
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-084 noswapfile ativo):
+  AssertEqual 0, &swapfile, 'swapfile deveria estar off (polui projetos com .swp)'
+
+Execute (UT-085 undofile ativo):
+  AssertEqual 1, &undofile, 'undofile deveria estar on (undo persistente)'
+
+Execute (UT-086 autoread ativo):
+  AssertEqual 1, &autoread, 'autoread deveria estar on (reload automatico)'
+
+Execute (UT-087 ignorecase e smartcase ativos):
+  AssertEqual 1, &ignorecase, 'ignorecase deveria estar on'
+  AssertEqual 1, &smartcase, 'smartcase deveria estar on'
+
+Execute (UT-088 cursorline ativo):
+  AssertEqual 1, &cursorline, 'cursorline deveria estar on'
+
+Execute (UT-089 number ativo):
+  AssertEqual 1, &number, 'number deveria estar on'
+
+Execute (UT-090 softtabstop e 2):
+  AssertEqual 2, &softtabstop, 'softtabstop deveria ser 2'
+
+Execute (UT-091 test ruby executable e bundle exec rspec):
+  Assert exists("g:test#ruby#rspec#executable"),
+        \ 'test#ruby#rspec#executable nao definido'
+  Assert g:test#ruby#rspec#executable =~# 'bundle exec rspec',
+        \ 'test ruby executable errado: ' . g:test#ruby#rspec#executable
+
+Execute (UT-092 test elixir executable e mix test):
+  Assert exists("g:test#elixir#exunit#executable"),
+        \ 'test#elixir#exunit#executable nao definido'
+  Assert g:test#elixir#exunit#executable =~# 'mix test',
+        \ 'test elixir executable errado: ' . g:test#elixir#exunit#executable
+
+Execute (UT-093 rooter_silent_chdir ativo):
+  AssertEqual 1, g:rooter_silent_chdir
+
+Execute (UT-094 projectionist Phoenix LiveView pattern presente):
+  Assert has_key(g:projectionist_heuristics['mix.exs'],
+        \ 'lib/*_web/live/*_live.ex'),
+        \ 'padrao LiveView ausente em projectionist heuristics'

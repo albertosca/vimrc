@@ -152,6 +152,20 @@ Execute (IT-125 pathogen infect chamado apenas uma vez):
   AssertEqual 0, infect_count,
         \ 'plugins.vim nao deveria chamar pathogen#infect (ja no .vimrc)'
 
+Execute (IT-147 DadbodCompletion augroup existe):
+  redir => autocmds
+  silent autocmd DadbodCompletion
+  redir END
+  Assert autocmds =~# 'sql\|mysql\|plsql',
+        \ 'augroup DadbodCompletion deveria cobrir filetypes SQL'
+
+Execute (IT-148 coc_folding augroup com formatexpr existe):
+  redir => autocmds
+  silent autocmd coc_folding
+  redir END
+  Assert autocmds =~# 'formatexpr\|CocAction',
+        \ 'augroup coc_folding deveria setar formatexpr'
+
 Execute (IT-126 funcoes CmdLine e VisualSelection nao duplicadas):
   " Devem existir em apenas um arquivo (options.vim ou editor.vim)
   let options_vim = readfile(expand('~/.vim_runtime/vimrcs/options.vim'))
