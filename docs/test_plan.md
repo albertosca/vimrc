@@ -464,7 +464,7 @@ After:
 1. Criar `.github/workflows/test.yml` com o esqueleto da seção "Como executar".
 2. Fazer push de uma branch de teste e verificar que o pipeline passa.
 3. Adicionar badge no `README.md`.
-4. Configurar branch protection rule no GitHub para exigir que o workflow passe antes de merge em `master`.
+4. Configurar branch protection rule no GitHub para exigir que o workflow passe antes de merge em `main`.
 
 **Definição de pronto:** badge verde visível no README; tentativa de push com teste falhando é bloqueada.
 
