@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": []
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "if": "Edit(/Users/albertosca/.vim_runtime/*)",
+            "prompt": "Você está decidindo se uma edição num Vim config merece rodar a suite de testes.\n\nArquivo editado + conteúdo (old/new_string ou content) está em $ARGUMENTS.\n\nSó considere SUBSTANCIAL se TODAS as condições valem:\n1. O arquivo é UM DOS SEGUINTES paths:\n   - /Users/albertosca/.vim_runtime/configs.vim\n   - /Users/albertosca/.vim_runtime/vimrcs/*.vim\n   - /Users/albertosca/.vim_runtime/test/** (qualquer teste ou fixture)\n   - /Users/albertosca/.vim_runtime/.claude/skills/test/SKILL.md\n2. A mudança afeta comportamento em runtime. Exemplos SUBSTANCIAIS: nova função, novo `autocmd`, novo mapping (`nnoremap`/`xnoremap`), novo `let g:`, novo `call`, alteração em augroup/autocmd existente, adição/remoção de linha de teste, mudança em test/run.sh.\n3. NÃO é só comentário (`^\\s*\"`), whitespace, docstring em markdown, renomear variável local sem uso externo, reformatar tabela.\n\nSe substancial: responda EXATAMENTE este JSON (sem markdown, sem explicação):\n{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"AUTO-TEST HOOK: edit substancial detectado num arquivo crítico do Vim config. Invoque /test antes de reportar a task concluída.\"}}\n\nSe trivial ou fora dos paths: responda EXATAMENTE:\n{}\n\nResposta agora (só JSON, nada mais):"
+          }
+        ]
+      }
+    ]
+  }
+}
