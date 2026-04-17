@@ -329,8 +329,7 @@ let g:coc_global_extensions = [
       \ 'coc-pyright',
       \ 'coc-snippets',
       \ 'coc-tailwindcss',
-      \ 'coc-go',
-      \ 'coc-ruff'
+      \ 'coc-go'
       \ ]
 
 " =============================================================================

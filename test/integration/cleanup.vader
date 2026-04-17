@@ -102,3 +102,21 @@ Execute (IT-154 comando Claude existe):
 Execute (IT-155 comando CopilotChatOpen existe):
   Assert exists(':CopilotChatOpen') == 2,
         \ 'comando :CopilotChatOpen nao existe (copilot-chat nao carregou)'
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-156 a IT-158: vim-tmux-navigator — navegação integrada Vim↔tmux
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-156 vim-tmux-navigator presente no runtimepath):
+  Assert &rtp =~# 'vim-tmux-navigator',
+        \ 'vim-tmux-navigator nao encontrado no rtp'
+
+Execute (IT-157 comando TmuxNavigateLeft existe):
+  Assert exists(':TmuxNavigateLeft') == 2,
+        \ 'comando :TmuxNavigateLeft nao existe (vim-tmux-navigator nao carregou)'
+
+Execute (IT-158 mappings C-h/j/k/l apontam para TmuxNavigate):
+  Assert maparg('<c-h>', 'n') =~? 'TmuxNavigateLeft',  'C-h: ' . maparg('<c-h>', 'n')
+  Assert maparg('<c-j>', 'n') =~? 'TmuxNavigateDown',  'C-j: ' . maparg('<c-j>', 'n')
+  Assert maparg('<c-k>', 'n') =~? 'TmuxNavigateUp',    'C-k: ' . maparg('<c-k>', 'n')
+  Assert maparg('<c-l>', 'n') =~? 'TmuxNavigateRight', 'C-l: ' . maparg('<c-l>', 'n')

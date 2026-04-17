@@ -98,7 +98,7 @@ Execute (UT-050 projectionist Gemfile model alterna para spec):
 " UT-051 a UT-052: CoC — lista de extensões
 " ─────────────────────────────────────────────────────────────────────────────
 
-Execute (UT-051 coc_global_extensions contem todas as 23 extensoes):
+Execute (UT-051 coc_global_extensions contem todas as 21 extensoes):
   let required = [
         \ 'coc-elixir', 'coc-tsserver', 'coc-pyright',
         \ 'coc-css', 'coc-tailwindcss', 'coc-eslint', 'coc-prettier',
@@ -106,7 +106,7 @@ Execute (UT-051 coc_global_extensions contem todas as 23 extensoes):
         \ 'coc-json', 'coc-yaml', 'coc-xml', 'coc-sh',
         \ 'coc-git', 'coc-yank', 'coc-docker', 'coc-browser',
         \ 'coc-markdownlint',
-        \ 'coc-go', 'coc-ruff'
+        \ 'coc-go'
         \ ]
   for ext in required
     Assert index(g:coc_global_extensions, ext) >= 0,
@@ -223,11 +223,6 @@ Execute (UT-071 coc_global_extensions contem coc-go para Go LSP):
   Assert index(g:coc_global_extensions, 'coc-go') >= 0,
         \ 'coc-go ausente — Go fica sem LSP no CoC'
 
-Execute (UT-072 coc_global_extensions contem coc-ruff para Python linting):
-  " Ruff e 10-100x mais rapido que flake8/pylint e substitui todos
-  Assert index(g:coc_global_extensions, 'coc-ruff') >= 0,
-        \ 'coc-ruff ausente — Python fica sem linter rapido'
-
 Execute (UT-073 coc-solargraph removido da lista de extensoes):
   " Ruby LSP (Shopify) substitui Solargraph — configurado via languageserver
   Assert index(g:coc_global_extensions, 'coc-solargraph') < 0,
@@ -281,13 +276,13 @@ Execute (UT-080 cmdheight e 1):
   " cmdheight=2 desperdiça linha — CoC usa statusline + shortmess+=c
   AssertEqual 1, &cmdheight, 'cmdheight deveria ser 1 (linha extra desnecessaria)'
 
-Execute (UT-081 window nav C-J definido apenas em configs.vim):
-  " options.vim e configs.vim ambos definem C-J — deve existir apenas uma vez
-  " Verificamos que o mapping nao tem source duplo inspecionando o dict
+Execute (UT-081 window nav C-J mapeado via vim-tmux-navigator):
+  " vim-tmux-navigator sobrescreve o <C-W>j de options.vim para navegar
+  " tambem entre paineis do tmux — comportamento desejado
   let m = maparg('<C-J>', 'n', 0, 1)
   Assert !empty(m), 'C-J mapping nao encontrado'
-  " O mapping deve apontar para a forma configs.vim: <C-W><C-J>
-  Assert m.rhs =~# '<C-W>', 'C-J deveria mapear para <C-W>: ' . m.rhs
+  Assert m.rhs =~# 'TmuxNavigateDown\|<C-W>',
+        \ 'C-J deveria navegar (tmux ou window): ' . m.rhs
 
 Execute (UT-082 sem guifont Font Awesome):
   " Font Awesome e icon font, nao coding font — guifont nao deve referencia-la

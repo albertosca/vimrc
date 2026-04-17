@@ -89,6 +89,7 @@ plugin_file "vim-fugitive"           "plugin/fugitive.vim"
 plugin_file "vim-gitgutter"          "plugin/gitgutter.vim"
 plugin_file "auto-pairs"             "plugin/auto-pairs.vim"
 plugin_file "nerdtree"               "plugin/NERD_tree.vim"
+plugin_file "vim-tmux-navigator"     "plugin/tmux_navigator.vim"
 
 # vim-snippets: verifica que tem snippets, não só o diretório
 snippets_count=$(find "$PLUGINS/vim-snippets/snippets" -name "*.snippets" 2>/dev/null | wc -l | tr -d ' ')

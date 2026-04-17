@@ -158,3 +158,6 @@
 	path = plugins/vim-claude-code
 	url = https://github.com/rishi-opensource/vim-claude-code
 	ignore = dirty
+[submodule "plugins/vim-tmux-navigator"]
+	path = plugins/vim-tmux-navigator
+	url = https://github.com/christoomey/vim-tmux-navigator.git
