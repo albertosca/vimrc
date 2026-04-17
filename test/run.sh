@@ -235,6 +235,7 @@ run_vader_suite() {
   _start=$(now_ms)
   _out=$(vim -N -u ~/.vimrc \
     --cmd "set rtp+=$VADER_RTP" \
+    --cmd "let g:copilot_chat_test_mode = 1" \
     -c "Vader! $glob" \
     -c "qa!" 2>&1) || true
   _elapsed=$(( $(now_ms) - _start ))

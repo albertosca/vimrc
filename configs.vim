@@ -525,3 +525,67 @@ let g:claude_code_split_ratio = 0.4
 " ,pc → abre o chat Copilot   visual ,cq → pergunta sobre seleção
 nnoremap <leader>pc :CopilotChatOpen<CR>
 xnoremap <leader>cq :CopilotChat<space>
+
+" =============================================================================
+" Startup screen — atalhos úteis ao abrir Vim sem argumentos
+" =============================================================================
+function! s:StartScreen() abort
+  " Não mostra se: abriu com arquivo, sessão restaurada, buffer já tem conteúdo,
+  " ou estamos rodando testes (Vader carregado via --cmd)
+  if argc() || !empty(v:this_session) || line('$') > 1 || getline(1) !=# ''
+        \ || exists(':Vader') || !empty(globpath(&rtp, 'plugin/vader.vim'))
+    return
+  endif
+
+  enew
+  setlocal bufhidden=wipe buftype=nofile nobuflisted nocursorline nocursorcolumn
+  setlocal noswapfile nomodifiable nonumber norelativenumber signcolumn=no
+
+  let lines = [
+        \ '',
+        \ '    Vim ' . v:version/100 . '.' . v:version%100 . '   —   ,e editar configs.vim',
+        \ '',
+        \ '    BUSCA                          LSP (CoC)',
+        \ '    Ctrl+f  Arquivos (fzf)         K       Documentação',
+        \ '    Ctrl+b  Buffers                gd      Goto definition',
+        \ '    ,gf     Git files              ,rn     Renomear símbolo',
+        \ '    ,rg     Ripgrep (conteúdo)     ,a      Code actions',
+        \ '    ,bl     Linhas do buffer       ,gr     Referências',
+        \ '    ,ht     Histórico              [g ]g   Diagnóstico prev/next',
+        \ '    ,nn     NERDTree               Space+a Todos diagnósticos',
+        \ '                                   Space+o Outline',
+        \ '    GIT                             :Format :OR',
+        \ '    ,gv     Log do projeto',
+        \ '    ,gV     Log do arquivo          TESTES',
+        \ '    ,gm     Blame da linha          ,tn     Mais próximo',
+        \ '    ,d      Toggle gutter           ,tf     Arquivo',
+        \ '                                    ,ts     Suíte',
+        \ '    IA',
+        \ '    Ctrl+\  Claude Code (toggle)    SESSÃO',
+        \ '    ,ce     Explicar seleção        ,os     Obsession on/off',
+        \ '    ,cf     Corrigir código         ,u      Undotree',
+        \ '    ,cr     Refatorar               :A      Código <> Teste',
+        \ '    ,pc     Copilot Chat',
+        \ '',
+        \ '    Pressione qualquer tecla para começar...',
+        \ ]
+
+  " Centraliza verticalmente
+  let padding = (winheight(0) - len(lines)) / 2
+  let padded = repeat([''], max([0, padding])) + lines
+
+  setlocal modifiable
+  call setline(1, padded)
+  setlocal nomodifiable
+
+  " Enter/Space/q fecham a tela. Qualquer comando que abre um novo buffer
+  " (ex: Ctrl+f, ,nn, :e) substitui este — bufhidden=wipe limpa sozinho.
+  nnoremap <buffer><silent> <CR>    :enew<CR>
+  nnoremap <buffer><silent> <Space> :enew<CR>
+  nnoremap <buffer><silent> q       :enew<CR>
+endfunction
+
+augroup StartScreen
+  autocmd!
+  autocmd VimEnter * call s:StartScreen()
+augroup end
