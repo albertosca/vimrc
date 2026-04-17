@@ -16,6 +16,9 @@ tags
 # Database queries (may contain connection strings with passwords)
 db_queries/
 
+# copilot-chat.vim runtime data (OAuth device + chat tokens)
+copilot-chat/
+
 # Test isolation
 test/xdg/
 test/node/node_modules/
