@@ -308,28 +308,36 @@ imap <C-j> <Plug>(coc-snippets-expand-jump)
 " Endwise: disable default mapping (coc handles insert-mode <CR>)
 let g:endwise_no_mappings = 1
 
+" Lista de extensions auto-instaladas pelo CoC em máquina nova.
+" Sincronizada com ~/.config/coc/extensions/package.json em 2026-04-23,
+" excluindo as banidas pela política (test/unit/variables.vader UT-052):
+"   coc-rome (deprecated), coc-java, coc-texlab, coc-powershell, coc-solargraph.
 let g:coc_global_extensions = [
-      \ 'coc-json',
-      \ 'coc-git',
-      \ 'coc-css',
       \ 'coc-browser',
+      \ 'coc-css',
       \ 'coc-docker',
       \ 'coc-elixir',
+      \ 'coc-emmet',
       \ 'coc-eslint',
+      \ 'coc-git',
+      \ 'coc-go',
       \ 'coc-html',
+      \ 'coc-json',
+      \ 'coc-markdown-preview-enhanced',
       \ 'coc-markdownlint',
       \ 'coc-prettier',
-      \ 'coc-sh',
-      \ 'coc-yaml',
-      \ 'coc-yank',
-      \ 'coc-xml',
-      \ 'coc-emmet',
-      \ 'coc-sql',
-      \ 'coc-tsserver',
       \ 'coc-pyright',
+      \ 'coc-sh',
       \ 'coc-snippets',
+      \ 'coc-sql',
+      \ 'coc-stylelint',
+      \ 'coc-stylelintplus',
       \ 'coc-tailwindcss',
-      \ 'coc-go'
+      \ 'coc-tsserver',
+      \ 'coc-webview',
+      \ 'coc-xml',
+      \ 'coc-yaml',
+      \ 'coc-yank'
       \ ]
 
 " =============================================================================
