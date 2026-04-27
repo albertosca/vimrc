@@ -16,6 +16,7 @@
 | `,ht` | Historico de arquivos abertos | fzf |
 | `,nn` | Abrir/Fechar arvore de arquivos | NERDTree |
 | `,nf` | Localizar arquivo atual na arvore | NERDTree |
+| `,nb` | Abrir NERDTree a partir de um bookmark | NERDTree |
 | `,cs` | Copiar **nome** do arquivo para clipboard | Custom |
 | `,cl` | Copiar **caminho completo** para clipboard | Custom |
 
@@ -23,7 +24,9 @@
 
 ---
 
-## 2. Janelas (Windows) e Abas (Tabs)
+## 2. Janelas, Abas e Buffers
+
+**Splits e abas:**
 
 | Atalho | Acao |
 | :--- | :--- |
@@ -32,24 +35,68 @@
 | `gr` | Aba anterior |
 | `,tn` | Nova aba (se vim-test nao interceptar — ver secao 8) |
 | `,tc` | Fechar aba |
+| `,to` | Fechar todas as outras abas (`:tabonly`) |
 | `,te` | Abrir aba no diretorio do arquivo atual |
 | `,tl` | Toggle entre esta aba e a ultima acessada |
+| `,tm <num>` | Mover aba para posicao `<num>` (interativo) |
+| `,t,` | Ir para proxima aba (`<leader>t<leader>` → `:tabnext`) |
+
+**Buffers:**
+
+| Atalho | Acao |
+| :--- | :--- |
+| `,l` | Proximo buffer |
+| `,h` | Buffer anterior |
+| `,bd` | Fechar buffer atual (e a aba se ficar vazia) |
+| `,ba` | Fechar TODOS os buffers (`:bufdo bd`) |
+| `[b` / `]b` | Buffer anterior/proximo (vim-unimpaired — ver secao 6) |
 
 ---
 
 ## 3. Edicao e Produtividade
 
+**Edicao e busca:**
+
 | Atalho | Acao | Plugin |
 | :--- | :--- | :--- |
-| `Alt+j/k` | Mover linha para baixo/cima | Nativo |
+| `Alt+j/k` | Mover linha para baixo/cima (`Cmd+j/k` no GVim macOS) | Nativo |
 | `,w` | Salvar (`:w!`) | Nativo |
 | `*` / `#` | Buscar palavra selecionada em visual mode | Nativo |
 | `F3` | Ligar/desligar realce de busca | Nativo |
-| `,ss` | Ligar/desligar corretor ortografico | Nativo |
+| `,<Enter>` | Desligar realce da busca atual (`:noh`) | Nativo |
+| `(visual) ,r` | Buscar-e-substituir o texto selecionado | Custom |
 | `,pp` | Ligar/desligar modo paste | Nativo |
-| `Ctrl+n` | Multiplos cursores (seleciona proxima ocorrencia) | vim-visual-multi |
+| `Ctrl+n` | Multiplos cursores (proxima ocorrencia — ver secao 15) | vim-visual-multi |
 | `,u` | Abrir arvore visual de undo | undotree |
 | `Ctrl+p` | Ligar/desligar auto-pairs | auto-pairs |
+| `,cd` | `cd` para o diretorio do arquivo atual (e mostra `pwd`) | Nativo |
+| `,m` | Remover caracteres `^M` (line endings Windows) | Nativo |
+
+**Scratch buffers (rascunho global):**
+
+| Atalho | Acao |
+| :--- | :--- |
+| `,q` | Abrir scratch livre em `~/buffer` |
+| `,x` | Abrir scratch Markdown em `~/buffer.md` |
+
+**Corretor ortografico:**
+
+| Atalho | Acao |
+| :--- | :--- |
+| `,ss` | Ligar/desligar corretor |
+| `,sn` | Proximo erro (`]s`) |
+| `,sp` | Erro anterior (`[s`) |
+| `,sa` | Adicionar palavra ao dicionario (`zg`) |
+| `,s?` | Sugerir correcoes para a palavra sob o cursor (`z=`) |
+
+**Linha de comando (`:` e `/`) — atalhos estilo Emacs/readline:**
+
+| Atalho | Acao |
+| :--- | :--- |
+| `Ctrl+A` | Ir para o inicio da linha |
+| `Ctrl+E` | Ir para o fim da linha |
+| `Ctrl+K` | Apagar do cursor ate o fim da linha |
+| `Ctrl+P` / `Ctrl+N` | Comando anterior / proximo no historico |
 
 > **Smart auto-pairs:** `(`, `[`, `{`, `"`, `'`, `` ` `` nao fecham automaticamente quando ha texto colado a **direita** do cursor.
 
@@ -85,6 +132,12 @@
 | `=` | `<%= selecao %>` | Rails ERB |
 | `%` | `<% selecao %>` | Rails ERB |
 
+**Atalho custom:**
+
+| Sequencia | Resultado | Uso tipico |
+| :--- | :--- | :--- |
+| `Si` (visual) | `(_selecao)` com cursor apos `)` | Captures Elixir (`&(_)`), lambdas com placeholder |
+
 ---
 
 ## 5. LSP e Completion (CoC.nvim)
@@ -115,6 +168,8 @@
 | `Space+p` | Retomar ultima lista CoC |
 | `:Format` | Formatar buffer inteiro |
 | `:OR` | Organizar imports |
+
+> **Scroll de hover/diagnostic float:** com um popup do CoC aberto (hover via `K`, signature, diagnostic), use `Ctrl+f` / `Ctrl+b` em **insert** ou **visual** mode para rolar o float. Em **normal** mode esses atalhos pertencem ao fzf (Files/Buffers — secao 1); fora de float aberto, `Ctrl+f` em insert vira `<Right>` e `Ctrl+b` vira `<Left>`.
 
 ---
 
@@ -218,3 +273,136 @@
 | `,mdp` | Preview do Markdown |
 | `,mdt` | Inserir tabela Markdown |
 | `,mdl` | Listar comandos Markdown |
+
+---
+
+## 14. IA e Assistentes
+
+### Claude Code (vim-claude-code)
+
+**Terminal:**
+
+| Atalho | Acao |
+| :--- | :--- |
+| `Ctrl+\` | Toggle terminal Claude Code (normal e terminal mode) |
+| `,cC` | Continuar sessao anterior (`--continue`) |
+| `,cV` | Abrir em modo verbose |
+| `Ctrl+W z` | Maximizar/restaurar janela do terminal Claude |
+
+**Edicao** — funcionam em normal mode (arquivo inteiro) e visual mode (selecao):
+
+| Atalho | Acao |
+| :--- | :--- |
+| `,ce` | Explicar codigo / selecao |
+| `,cf` | Corrigir codigo / selecao |
+| `,cr` | Refatorar codigo / selecao |
+| `,ct` | Gerar testes para o codigo / selecao |
+| `,cd` | Gerar documentacao |
+| `,cn` | Renomear simbolo |
+| `,co` | Otimizar codigo / selecao |
+
+**Projeto** — normal mode:
+
+| Atalho | Acao |
+| :--- | :--- |
+| `,cG` | Gerar mensagem de commit |
+| `,cR` | Code review do arquivo atual |
+| `,cp` | Criar Pull Request |
+| `,cP` | Gerar plano de implementacao |
+| `,ca` | Analisar codigo / arquitetura |
+| `,cD` | Debugging assistido |
+| `,cA` | Aplicar diff sugerido pelo Claude |
+
+**Chat e meta:**
+
+| Atalho | Acao |
+| :--- | :--- |
+| `,cc` | Abrir chat livre com Claude |
+| `,cx` | Enviar contexto do buffer ao Claude |
+| `,cm` | Selecionar modelo Claude |
+
+> **Comando principal:** `:Claude <subcomando>` — todos os atalhos acima sao wrappers desse comando. Use `:Claude <Tab>` para completar. Subcomandos uteis: `version`, `doctor`, `preview install/status`.
+
+---
+
+### Copilot Chat (copilot-chat.vim)
+
+| Atalho / Comando | Acao |
+| :--- | :--- |
+| `,pc` | Abrir chat Copilot |
+| `(visual) ,cq` | Perguntar ao Copilot sobre a selecao |
+| `:CopilotChatToggle` | Toggle do painel de chat |
+| `:CopilotChatModels` | Selecionar modelo |
+| `:CopilotChatReset` | Limpar conversa atual |
+| `:CopilotChatSave [nome]` | Salvar conversa |
+| `:CopilotChatLoad [nome]` | Carregar conversa salva |
+| `:CopilotChatList` | Listar conversas salvas |
+| `:CopilotChatUsage` | Ver uso de tokens |
+
+---
+
+## 15. Visual Block
+
+### Nativo (`Ctrl+V`)
+
+| Atalho | Acao |
+| :--- | :--- |
+| `Ctrl+V` | Entrar em visual block mode |
+| `I` | Inserir texto ANTES do bloco em todas as linhas (confirmar com `Esc`) |
+| `A` | Adicionar texto DEPOIS do bloco em todas as linhas (confirmar com `Esc`) |
+| `c` | Substituir o bloco em todas as linhas (confirmar com `Esc`) |
+| `d` / `x` | Deletar o bloco |
+| `r<char>` | Substituir todos os caracteres do bloco por `<char>` |
+| `>` / `<` | Indentar / desindentar o bloco |
+| `~` | Alternar maiusculas/minusculas |
+| `u` / `U` | Converter para minusculas / MAIUSCULAS |
+| `J` | Juntar as linhas do bloco |
+| `o` | Mover cursor para o canto oposto |
+
+---
+
+### vim-visual-multi (`Ctrl+N`) — multi-cursor
+
+O VM_leader deste plugin e `\` (barra invertida), independente do `<Leader>` do Vim.
+
+**Entrada:**
+
+| Atalho | Acao |
+| :--- | :--- |
+| `Ctrl+N` | Selecionar proxima ocorrencia da palavra (normal) ou da selecao (visual) |
+| `\A` | Selecionar TODAS as ocorrencias de uma vez |
+| `\\` | Adicionar cursor na posicao atual |
+| `Ctrl+Down` / `Ctrl+Up` | Adicionar cursores verticalmente (coluna) |
+| `Shift+Down` / `Shift+Up` | Expandir selecao verticalmente |
+| `Shift+Right` / `Shift+Left` | Expandir selecao horizontalmente |
+| `(visual) \A` | Selecionar todas as ocorrencias da selecao atual |
+| `(visual) \c` | Criar cursores nos fins de linha da selecao |
+| `(visual) \f` | Usar selecao como padrao de busca |
+
+**Dentro da sessao VM:**
+
+| Atalho | Acao |
+| :--- | :--- |
+| `Tab` | Alternar cursor mode ↔ extend mode |
+| `n` / `N` | Proxima / anterior ocorrencia |
+| `]` / `[` | Ir para proximo / anterior cursor |
+| `q` | Pular esta ocorrencia e ir para a proxima |
+| `Q` | Remover cursor/selecao atual |
+| `Esc` | Sair do vim-visual-multi |
+
+**Operacoes (dentro da sessao VM):**
+
+| Atalho | Acao |
+| :--- | :--- |
+| `\a` | Alinhar cursores na mesma coluna |
+| `\m` | Mesclar regioes sobrepostas |
+| `\t` | Transpor selecoes entre cursores |
+| `\d` | Duplicar cada regiao |
+| `\s` | Dividir regioes por padrao regex |
+| `\N` / `\n` | Numerar sequencialmente (prefixo / sufixo) |
+| `S` | vim-surround em todas as selecoes |
+| `M` | Toggle modo multi-linha |
+| `\c` / `\C` | Case setting / menu de conversao |
+
+> **Cursor mode** (padrao): comandos normais (`c`, `d`, `y`, `.`, etc.) operam em todos os cursores simultaneamente.
+> **Extend mode** (`Tab`): comandos visuais (`>`, `<`, `S`, etc.) operam em todas as selecoes.
