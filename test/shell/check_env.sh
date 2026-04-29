@@ -132,6 +132,16 @@ require_bin "fzf"  "plugin fzf"
 optional_bin "psql" "vim-dadbod com PostgreSQL"
 optional_bin "mysql" "vim-dadbod com MySQL"
 
+# ── IT-088: Configurações críticas ───────────────────────────────────────────
+echo ""
+echo "── IT-088: Configurações críticas ──────────────────────────────────────"
+PLUGINS_VIM="$REPO_ROOT/vimrcs/plugins.vim"
+if grep -q 'NERDTreeWinPos.*=.*"left"' "$PLUGINS_VIM"; then
+  pass "NERDTree abre à esquerda (NERDTreeWinPos = \"left\")"
+else
+  fail "NERDTreeWinPos não está como \"left\" em vimrcs/plugins.vim — risco de regressão"
+fi
+
 # ── Resultado ─────────────────────────────────────────────────────────────────
 echo ""
 echo "────────────────────────────────────────────────────────────────────────"
