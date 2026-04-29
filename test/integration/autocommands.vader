@@ -169,6 +169,26 @@ Execute (IT-158 AgentAutoReload augroup com checktime existe):
   Assert autocmds =~# 'FocusGained\|BufEnter',
         \ 'AgentAutoReload deveria reagir a FocusGained ou BufEnter'
 
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-160 a IT-161: Markdown — ft_markdown augroup e conceallevel
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-160 ft_markdown augroup existe):
+  redir => autocmds
+  silent autocmd ft_markdown
+  redir END
+  Assert autocmds =~# 'markdown',
+        \ 'augroup ft_markdown deveria ter autocmd para FileType markdown'
+
+Execute (IT-161 conceallevel=2 em buffer markdown):
+  new
+  silent! file /tmp/test_it161.md
+  filetype detect
+  AssertEqual 2, &conceallevel,
+        \ 'conceallevel deveria ser 2 em arquivo markdown, obtido: ' . &conceallevel
+After:
+  bdelete!
+
 Execute (IT-148 coc_folding augroup com formatexpr existe):
   redir => autocmds
   silent autocmd coc_folding

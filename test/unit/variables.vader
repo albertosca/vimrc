@@ -339,3 +339,25 @@ Execute (UT-094 projectionist Phoenix LiveView pattern presente):
   Assert has_key(g:projectionist_heuristics['mix.exs'],
         \ 'lib/*_web/live/*_live.ex'),
         \ 'padrao LiveView ausente em projectionist heuristics'
+
+" ─────────────────────────────────────────────────────────────────────────────
+" UT-095 a UT-097: vim-markdown — variáveis de renderização
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (UT-095 vim_markdown_conceal_code_blocks desativado):
+  Assert exists('g:vim_markdown_conceal_code_blocks'),
+        \ 'g:vim_markdown_conceal_code_blocks nao definido'
+  AssertEqual 0, g:vim_markdown_conceal_code_blocks,
+        \ 'vim_markdown_conceal_code_blocks deveria ser 0 (code blocks nao ocultados)'
+
+Execute (UT-096 vim_markdown_frontmatter ativo):
+  Assert exists('g:vim_markdown_frontmatter'),
+        \ 'g:vim_markdown_frontmatter nao definido'
+  AssertEqual 1, g:vim_markdown_frontmatter,
+        \ 'vim_markdown_frontmatter deveria ser 1 (highlight de frontmatter YAML)'
+
+Execute (UT-097 vim_markdown_conceal ativo):
+  Assert exists('g:vim_markdown_conceal'),
+        \ 'g:vim_markdown_conceal nao definido'
+  AssertEqual 1, g:vim_markdown_conceal,
+        \ 'vim_markdown_conceal deveria ser 1 (conceal habilitado)'

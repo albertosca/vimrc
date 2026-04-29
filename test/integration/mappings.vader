@@ -320,3 +320,11 @@ Execute (IT-157 Ctrl-backslash mapeado para Claude toggle):
   " vim-claude-code usa C-\ como toggle por default
   let m = maparg("\<C-\\>", 'n')
   Assert !empty(m), 'C-\ nao tem mapping (vim-claude-code toggle)'
+
+" ─────────────────────────────────────────────────────────────────────────────
+" IT-159: Markdown — glow preview
+" ─────────────────────────────────────────────────────────────────────────────
+
+Execute (IT-159 leader-mg mapeado para glow preview):
+  let m = maparg(',mg', 'n')
+  Assert m =~# 'glow', ',mg nao mapeia para glow: ' . m

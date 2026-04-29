@@ -18,6 +18,19 @@ nnoremap <leader>mdp :CocCommand markdown-preview-enhanced.openPreview<CR>
 nnoremap <leader>mdt :CocCommand markdown-preview-enhanced.insertTable<CR>
 nnoremap <leader>mdl :CocList --input=markdown-preview-enhanced. commands<CR>
 
+" glow: preview estilo terminal (requer `glow` instalado)
+nnoremap <leader>mg :vert term glow -p %<CR>
+
+" vim-markdown: conceal e frontmatter
+let g:vim_markdown_conceal = 1
+let g:vim_markdown_conceal_code_blocks = 0
+let g:vim_markdown_frontmatter = 1
+
+augroup ft_markdown
+  autocmd!
+  autocmd FileType markdown setlocal conceallevel=2
+augroup END
+
 "Sets numbers to be always shown
 set nu
 
