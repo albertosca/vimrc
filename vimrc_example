@@ -1,0 +1,21 @@
+" ~/.vimrc — gerado a partir de vimrc_example
+"
+" Este arquivo apenas carrega o runtime que vive em ~/.vim_runtime.
+" Edite suas customizações em ~/.vim_runtime/configs.vim (a última camada vence).
+"
+" Instalação:
+"   git clone --recursive https://github.com/albertosca/vim-runtime.git ~/.vim_runtime
+"   bash ~/.vim_runtime/install.sh          " automático
+"   " ou, manualmente:
+"   ln -sf ~/.vim_runtime/vimrc_example ~/.vimrc
+"
+" A ordem importa — a última definição vence (configs.vim sobrescreve as camadas base).
+
+source ~/.vim_runtime/autoload/pathogen.vim
+call pathogen#infect('~/.vim_runtime/plugins/{}')
+
+source ~/.vim_runtime/vimrcs/options.vim
+source ~/.vim_runtime/vimrcs/filetypes.vim
+source ~/.vim_runtime/vimrcs/plugins.vim
+source ~/.vim_runtime/vimrcs/editor.vim
+source ~/.vim_runtime/configs.vim

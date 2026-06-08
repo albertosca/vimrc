@@ -142,6 +142,41 @@ else
   fail "NERDTreeWinPos não está como \"left\" em vimrcs/plugins.vim — risco de regressão"
 fi
 
+# ── IT-089: Bootstrap de instalação do zero ──────────────────────────────────
+echo ""
+echo "── IT-089: Instalação do zero (vimrc_example + install.sh) ──────────────"
+
+VIMRC_EXAMPLE="$REPO_ROOT/vimrc_example"
+if [ -f "$VIMRC_EXAMPLE" ]; then
+  pass "vimrc_example existe (template do ~/.vimrc)"
+  # Deve carregar pathogen + as 4 camadas base + configs.vim, nesta ordem.
+  ok=1
+  for src in autoload/pathogen.vim vimrcs/options.vim vimrcs/filetypes.vim \
+             vimrcs/plugins.vim vimrcs/editor.vim configs.vim; do
+    grep -q "$src" "$VIMRC_EXAMPLE" || { fail "vimrc_example não carrega $src"; ok=0; }
+  done
+  [ "$ok" -eq 1 ] && pass "vimrc_example carrega pathogen + 4 camadas + configs.vim"
+else
+  fail "vimrc_example ausente — README manda 'ln -sf ~/.vim_runtime/vimrc_example ~/.vimrc'"
+fi
+
+INSTALL_SH="$REPO_ROOT/install.sh"
+if [ -f "$INSTALL_SH" ]; then
+  pass "install.sh existe"
+  [ -x "$INSTALL_SH" ] && pass "install.sh é executável" \
+                       || fail "install.sh não é executável (chmod +x)"
+  bash -n "$INSTALL_SH" && pass "install.sh tem sintaxe válida" \
+                        || fail "install.sh tem erro de sintaxe"
+  grep -q 'submodule update --init' "$INSTALL_SH" \
+    && pass "install.sh inicializa submodules" \
+    || fail "install.sh não inicializa submodules"
+  grep -q 'coc-settings.json' "$INSTALL_SH" \
+    && pass "install.sh linka coc-settings.json" \
+    || fail "install.sh não linka coc-settings.json"
+else
+  fail "install.sh ausente — README documenta 'bash ~/.vim_runtime/install.sh'"
+fi
+
 # ── Resultado ─────────────────────────────────────────────────────────────────
 echo ""
 echo "────────────────────────────────────────────────────────────────────────"

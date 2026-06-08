@@ -11,7 +11,7 @@ vimrcs/
   filetypes.vim          ← detecção de filetype e indent por linguagem
   plugins.vim            ← carregamento do Pathogen + config de plugins terceiros
   editor.vim             ← undo persistente, GUI, helpers, VisualSelection
-plugins/                 ← 47 plugins (gerenciados por Pathogen, NÃO vim-plug/lazy)
+plugins/                 ← 50 plugins (gerenciados por Pathogen, NÃO vim-plug/lazy)
 autoload/pathogen.vim    ← plugin manager
 colors/                  ← colorschemes extras (gruvbox é o ativo, vive em plugins/)
 test/                    ← suite de testes (vader, jest, shell) — ver docs/test_plan.md
@@ -60,7 +60,7 @@ bash test/run.sh unit     # só uma suite (unit, integration, e2e, json, shell)
 
 - **Manager**: Pathogen (NÃO vim-plug, NÃO lazy.nvim)
 - **Diretório**: `plugins/` — cada subdiretório é um plugin
-- **Submodules**: 27 plugins são git submodules (`.gitmodules`), os demais são embedded
+- **Submodules**: 33 plugins são git submodules (`.gitmodules`), os demais são embedded
 - **Atualizar**: `cd plugins && bash update_plugins.sh`
 
 ## LSP

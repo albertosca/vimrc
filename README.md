@@ -2,7 +2,7 @@
 
 Setup profissional para desenvolvimento poliglota: **Elixir/Phoenix, Ruby/Rails, JS/React/Node, Python, Go, Rust**.
 
-Baseado no [amix/vimrc](https://github.com/amix/vimrc), refatorado com CoC.nvim como LSP client, fzf como busca unificada, e 219 testes automatizados.
+Baseado no [amix/vimrc](https://github.com/amix/vimrc), refatorado com CoC.nvim como LSP client, fzf como busca unificada, e 309 testes automatizados.
 
 ## Estrutura
 
@@ -22,12 +22,33 @@ docs/                    ← documentacao
 
 ## Instalacao
 
+> ⚠️ O repo **precisa** ficar em `~/.vim_runtime` — os paths sao hardcoded
+> (sources, undodir). Use exatamente o caminho do clone abaixo.
+
+**Automatica (recomendada):**
+
 ```bash
 git clone --recursive https://github.com/albertosca/vim-runtime.git ~/.vim_runtime
-ln -sf ~/.vim_runtime/vimrc_example ~/.vimrc   # ou edite o seu ~/.vimrc
+bash ~/.vim_runtime/install.sh
 ```
 
-O `~/.vimrc` deve carregar nesta ordem:
+O `install.sh` e idempotente e faz backup do que ja existir. Ele:
+inicializa os submodules, cria `~/.vimrc` apontando para `vimrc_example`, e
+linka `coc-settings.json` em `~/.vim/coc-settings.json` (config do LSP).
+
+**Manual:**
+
+```bash
+git clone --recursive https://github.com/albertosca/vim-runtime.git ~/.vim_runtime
+ln -sf ~/.vim_runtime/vimrc_example ~/.vimrc           # carrega o runtime
+mkdir -p ~/.vim
+ln -sf ~/.vim_runtime/coc-settings.json ~/.vim/coc-settings.json   # config do CoC
+```
+
+> Esqueceu o `--recursive`? Recupere os plugins com:
+> `git -C ~/.vim_runtime submodule update --init --recursive`
+
+O `~/.vimrc` (via `vimrc_example`) carrega nesta ordem — a ultima definicao vence:
 
 ```vim
 source ~/.vim_runtime/autoload/pathogen.vim
@@ -39,15 +60,16 @@ source ~/.vim_runtime/vimrcs/editor.vim
 source ~/.vim_runtime/configs.vim
 ```
 
-## Plugins (45)
+## Plugins (50)
 
 | Categoria | Plugins |
 |---|---|
 | **LSP / Completion** | coc.nvim (21 extensoes), vim-snippets |
+| **IA** | copilot-chat.vim, vim-claude-code |
 | **Busca** | fzf, fzf.vim |
-| **Navegacao** | NERDTree, vim-rooter, vim-projectionist, vim-rails |
+| **Navegacao** | NERDTree, vim-rooter, vim-projectionist, vim-rails, vim-tmux-navigator |
 | **Git** | vim-fugitive, vim-gitgutter, gv.vim |
-| **Edicao** | vim-surround, auto-pairs, vim-visual-multi, vim-commentary, vim-endwise, vim-repeat, tabular, vim-expand-region, vim-indent-object, vim-unimpaired, vim-abolish, vim-closetag |
+| **Edicao** | vim-surround, auto-pairs, vim-visual-multi, vim-commentary, vim-endwise, vim-repeat, tabular, vim-expand-region, vim-indent-object, vim-unimpaired, vim-abolish, vim-closetag, vim-matchup, vim-sleuth |
 | **Testes** | vim-test, vimux |
 | **Linguagens** | vim-elixir, vim-mix-format, vimix, vim-go, rust.vim, vim-jsx-improve, vim-js-pretty-template, vim-mdx-js, vim-markdown |
 | **Database** | vim-dadbod, vim-dadbod-ui, vim-dadbod-completion |
@@ -94,7 +116,7 @@ Destaques:
 
 ## Testes
 
-219 testes automatizados em 5 suites:
+309 testes automatizados em 5 suites:
 
 ```bash
 bash test/run.sh          # compacto — uma linha por suite
@@ -105,14 +127,14 @@ bash test/run.sh unit     # rodar uma suite especifica
 
 ```
   Vim Config Test Suite
-  ─────────────────────────────────────────────────
-  ✓  shell            32 passed  1 warn  0 failed
-  ✓  unit             64 passed  0 failed
-  ✓  integration      87 passed  0 failed
+  ─────────────────────────────────────────────────────
+  ✓  shell            41 passed  1 warn  0 failed
+  ✓  unit             90 passed  0 failed
+  ✓  integration      131 passed  0 failed
   ✓  e2e              19 passed  0 failed
-  ✓  jest             17 passed  0 failed
-  ─────────────────────────────────────────────────
-  ✓ 219 passed   all green
+  ✓  jest             28 passed  0 failed
+  ─────────────────────────────────────────────────────
+  ✓ 309 passed   all green
 ```
 
 Detalhes da arquitetura de testes em **[docs/test_plan.md](docs/test_plan.md)**.
