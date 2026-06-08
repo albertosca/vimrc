@@ -539,6 +539,9 @@ endif
 let g:claude_code_position = 'right'
 let g:claude_code_split_ratio = 0.4
 
+" Remove C-\ do tmux-navigator (conflita com Claude Code toggle)
+nnoremap <silent> <c-\> <Nop>
+
 " =============================================================================
 " copilot-chat.vim — Chat com Copilot dentro do Vim
 " Nota: ,c* é reservado para vim-claude-code (explain, fix, refactor, etc.)
