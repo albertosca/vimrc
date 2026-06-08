@@ -128,11 +128,6 @@
 	url = https://github.com/tpope/vim-unimpaired
 	ignore = dirty
 
-[submodule "plugins/vimix"]
-	path = plugins/vimix
-	url = https://github.com/mike-hearn/vim-vimix
-	ignore = dirty
-
 [submodule "plugins/vimux"]
 	path = plugins/vimux
 	url = https://github.com/preservim/vimux

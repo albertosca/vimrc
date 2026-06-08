@@ -45,10 +45,22 @@ fi
 info "Repo em $EXPECTED"
 
 # 2. Submodules — sem isso fzf, coc.nvim, vim-elixir etc. vêm vazios.
+# Itera um a um: se um repo sumiu do GitHub, avisa e continua em vez de abortar tudo.
 if command -v git > /dev/null 2>&1 && [ -f "$REPO_ROOT/.gitmodules" ]; then
   echo "Inicializando submodules (pode demorar na primeira vez)..."
-  git -C "$REPO_ROOT" submodule update --init --recursive
-  info "Submodules atualizados"
+  fail_count=0
+  while IFS= read -r mod_path; do
+    if ! git -C "$REPO_ROOT" submodule update --init "$mod_path" > /dev/null 2>&1; then
+      mod_url=$(git -C "$REPO_ROOT" config --file .gitmodules "submodule.$mod_path.url" 2>/dev/null || echo "url desconhecida")
+      warn "Submodule ignorado (repo inacessível?): $(basename "$mod_path")  ← $mod_url"
+      fail_count=$((fail_count + 1))
+    fi
+  done < <(git -C "$REPO_ROOT" config --file .gitmodules --get-regexp 'submodule\..*\.path' | awk '{print $2}')
+  if [ "$fail_count" -eq 0 ]; then
+    info "Submodules atualizados"
+  else
+    warn "$fail_count submodule(s) ignorado(s) — o Vim funciona, mas esses plugins estão ausentes"
+  fi
 else
   warn "git ou .gitmodules ausente — pulei submodules"
 fi

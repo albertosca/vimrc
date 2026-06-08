@@ -177,6 +177,85 @@ else
   fail "install.sh ausente — README documenta 'bash ~/.vim_runtime/install.sh'"
 fi
 
+# ── IT-090: install.sh comportamento real ─────────────────────────────────────
+echo ""
+echo "── IT-090: install.sh comportamento real ────────────────────────────────"
+
+# Cria HOME temporário com install.sh + arquivos mínimos + .gitmodules fictício
+_setup_fake_home() {
+  local fh
+  fh=$(mktemp -d)
+  local r="$fh/.vim_runtime"
+  mkdir -p "$r/bin_stub"
+  cp "$INSTALL_SH" "$r/install.sh"
+  printf '# vimrc_example stub\n' > "$r/vimrc_example"
+  printf '{}' > "$r/coc-settings.json"
+  printf '[submodule "plugins/mod-ok"]\n  path = plugins/mod-ok\n  url = https://x/mod-ok\n[submodule "plugins/mod-dead"]\n  path = plugins/mod-dead\n  url = https://x/mod-dead\n' > "$r/.gitmodules"
+  echo "$fh"
+}
+
+# IT-090a: caminho errado → exit 1 com mensagem "exige"
+_h=$(mktemp -d)
+cp "$INSTALL_SH" "$_h/"
+_out=$(HOME="$_h" bash "$_h/install.sh" 2>&1) && _rc=0 || _rc=$?
+rm -rf "$_h"
+[ "$_rc" -ne 0 ] && echo "$_out" | grep -q "exige" \
+  && pass "IT-090a: path errado → exit 1 + mensagem 'exige'" \
+  || fail "IT-090a: esperava exit 1 + 'exige', obteve exit=$_rc"
+
+# IT-090b: happy path — todos os submodules ok
+_h=$(_setup_fake_home)
+cat > "$_h/.vim_runtime/bin_stub/git" << 'EOF'
+#!/usr/bin/env bash
+while [[ "$1" == "-C" ]]; do shift 2; done
+if echo "$@" | grep -q "get-regexp"; then
+  echo "submodule.plugins/mod-ok.path plugins/mod-ok"
+  echo "submodule.plugins/mod-dead.path plugins/mod-dead"
+elif echo "$@" | grep -q "config.*url"; then
+  echo "https://x/stub"
+fi
+exit 0
+EOF
+chmod +x "$_h/.vim_runtime/bin_stub/git"
+_out=$(HOME="$_h" PATH="$_h/.vim_runtime/bin_stub:$PATH" bash "$_h/.vim_runtime/install.sh" 2>&1) && _rc=0 || _rc=$?
+rm -rf "$_h"
+[ "$_rc" -eq 0 ] && echo "$_out" | grep -q "Submodules atualizados" \
+  && pass "IT-090b: happy path → 'Submodules atualizados', exit 0" \
+  || fail "IT-090b: esperava exit 0 + 'Submodules atualizados', exit=$_rc"
+
+# IT-090c: um submodule falha → avisa (ignorado) e não aborta
+_h=$(_setup_fake_home)
+cat > "$_h/.vim_runtime/bin_stub/git" << 'EOF'
+#!/usr/bin/env bash
+while [[ "$1" == "-C" ]]; do shift 2; done
+if echo "$@" | grep -q "get-regexp"; then
+  echo "submodule.plugins/mod-ok.path plugins/mod-ok"
+  echo "submodule.plugins/mod-dead.path plugins/mod-dead"
+elif echo "$@" | grep -q "submodule update.*mod-dead"; then
+  exit 1
+elif echo "$@" | grep -q "config.*url"; then
+  echo "https://x/stub"
+fi
+exit 0
+EOF
+chmod +x "$_h/.vim_runtime/bin_stub/git"
+_out=$(HOME="$_h" PATH="$_h/.vim_runtime/bin_stub:$PATH" bash "$_h/.vim_runtime/install.sh" 2>&1) && _rc=0 || _rc=$?
+rm -rf "$_h"
+echo "$_out" | grep -q "ignorado" \
+  && pass "IT-090c: submodule morto → aviso 'ignorado' emitido" \
+  || fail "IT-090c: esperava 'ignorado' no output"
+[ "$_rc" -eq 0 ] \
+  && pass "IT-090c: script não abortou após falha de submodule" \
+  || fail "IT-090c: script abortou (exit $_rc) — deveria continuar"
+
+# IT-090d: git indisponível → warning sobre git ausente
+_h=$(_setup_fake_home)
+_out=$(HOME="$_h" PATH="/usr/bin:/bin" bash "$_h/.vim_runtime/install.sh" 2>&1) && _rc=0 || _rc=$?
+rm -rf "$_h"
+echo "$_out" | grep -qE "ausente|pulei" \
+  && pass "IT-090d: git ausente → warning emitido" \
+  || fail "IT-090d: esperava 'ausente' ou 'pulei' no output"
+
 # ── Resultado ─────────────────────────────────────────────────────────────────
 echo ""
 echo "────────────────────────────────────────────────────────────────────────"
