@@ -11,6 +11,7 @@
 [submodule "plugins/coc.nvim"]
 	path = plugins/coc.nvim
 	url = https://github.com/neoclide/coc.nvim
+	branch = release
 	ignore = dirty
 
 [submodule "plugins/fzf"]
