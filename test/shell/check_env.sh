@@ -256,6 +256,30 @@ echo "$_out" | grep -qE "ausente|pulei" \
   && pass "IT-090d: git ausente → warning emitido" \
   || fail "IT-090d: esperava 'ausente' ou 'pulei' no output"
 
+# ── IT-091: install.sh faz pre-flight de dependências ─────────────────────────
+echo ""
+echo "── IT-091: install.sh pre-flight de dependências ───────────────────────"
+
+# Pre-flight deve AVISAR (não abortar) quando node falta. Rodamos com um PATH
+# que tem git (pra passar do path-check) mas sem node, em fake home no caminho certo.
+_h=$(_setup_fake_home)
+cat > "$_h/.vim_runtime/bin_stub/git" << 'EOF'
+#!/usr/bin/env bash
+while [[ "$1" == "-C" ]]; do shift 2; done
+if echo "$@" | grep -q "get-regexp"; then echo "submodule.plugins/mod-ok.path plugins/mod-ok"; fi
+exit 0
+EOF
+chmod +x "$_h/.vim_runtime/bin_stub/git"
+# HOME aponta para fake home; install.sh roda de $HOME/.vim_runtime (path certo).
+_out=$(HOME="$_h" PATH="$_h/.vim_runtime/bin_stub:/usr/bin:/bin" bash "$_h/.vim_runtime/install.sh" 2>&1) && _rc=0 || _rc=$?
+rm -rf "$_h"
+echo "$_out" | grep -qiE "node.*aus|node.*não|node.*nao|node.*instale" \
+  && pass "IT-091a: node ausente → pre-flight avisa" \
+  || fail "IT-091a: esperava aviso sobre node ausente no output"
+[ "$_rc" -eq 0 ] \
+  && pass "IT-091b: pre-flight não aborta quando falta dependência" \
+  || fail "IT-091b: install.sh abortou (exit $_rc) — pre-flight deve só avisar"
+
 # ── Resultado ─────────────────────────────────────────────────────────────────
 echo ""
 echo "────────────────────────────────────────────────────────────────────────"

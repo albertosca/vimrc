@@ -44,6 +44,24 @@ if [ "$REPO_ROOT" != "$EXPECTED" ]; then
 fi
 info "Repo em $EXPECTED"
 
+# 1b. Pre-flight de dependências. Não aborta — só avisa, porque o Vim sobe
+#     mesmo sem elas (degradado). node é o mais crítico: sem ele o CoC nem carrega.
+echo "Checando dependências..."
+check_dep() {
+  # check_dep <bin> <obrigatório|opcional> <pra que serve> <como instalar>
+  local bin="$1" level="$2" what="$3" how="$4"
+  if command -v "$bin" > /dev/null 2>&1; then
+    info "$bin encontrado"
+  elif [ "$level" = "obrigatório" ]; then
+    warn "$bin AUSENTE — $what. Instale: $how"
+  else
+    warn "$bin ausente (opcional) — $what"
+  fi
+}
+check_dep node obrigatório "CoC (LSP) não carrega sem ele" "https://nodejs.org ou 'brew install node'"
+check_dep rg   obrigatório "busca via fzf/Ack fica degradada"  "'brew install ripgrep' ou 'apt install ripgrep'"
+check_dep git  obrigatório "submodules e plugins de git"        "'brew install git' ou 'apt install git'"
+
 # 2. Submodules — sem isso fzf, coc.nvim, vim-elixir etc. vêm vazios.
 # Itera um a um: se um repo sumiu do GitHub, avisa e continua em vez de abortar tudo.
 if command -v git > /dev/null 2>&1 && [ -f "$REPO_ROOT/.gitmodules" ]; then
