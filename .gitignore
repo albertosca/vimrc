@@ -22,3 +22,6 @@ copilot-chat/
 # Test isolation
 test/xdg/
 test/node/node_modules/
+
+# Superpowers skills (infra local de Claude Code)
+docs/superpowers/
