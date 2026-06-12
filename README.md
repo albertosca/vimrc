@@ -160,6 +160,16 @@ Detalhes da arquitetura de testes em **[docs/test_plan.md](docs/test_plan.md)**.
 6. **Auto-save:** Todos os buffers sao salvos ao sair do foco do Vim (troca de app/tmux pane)
 7. **Raiz do projeto automatica:** vim-rooter detecta `.git`, `mix.exs`, `Gemfile`, `package.json` e faz `cd` automatico
 
+## Ecossistema
+
+Este config faz parte de um setup maior:
+
+| Repo | O que e |
+|---|---|
+| **[albertosca/vim](https://github.com/albertosca/vim)** | Este repo — config Vim com Pathogen + CoC |
+| **[albertosca/tmux](https://github.com/albertosca/tmux)** | Config tmux complementar |
+| **[albertosca/vim-tutorial](https://github.com/albertosca/vim-tutorial)** | Tutorial interativo Vim + tmux para devs |
+
 ## Licenca
 
 MIT
