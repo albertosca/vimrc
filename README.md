@@ -2,7 +2,7 @@
 
 Setup profissional para desenvolvimento poliglota: **Elixir/Phoenix, Ruby/Rails, JS/React/Node, Python, Go, Rust**.
 
-Baseado no [amix/vimrc](https://github.com/amix/vimrc), refatorado com CoC.nvim como LSP client, fzf como busca unificada, e 316 testes automatizados.
+CoC.nvim como LSP client, fzf como busca unificada, e 316 testes automatizados. Veja [Créditos](#créditos).
 
 ## Estrutura
 
@@ -169,6 +169,10 @@ Este config faz parte de um setup maior:
 | **[albertosca/vim](https://github.com/albertosca/vim)** | Este repo — config Vim com Pathogen + CoC |
 | **[albertosca/tmux](https://github.com/albertosca/tmux)** | Config tmux complementar |
 | **[albertosca/vim-tutorial](https://github.com/albertosca/vim-tutorial)** | Tutorial interativo Vim + tmux para devs |
+
+## Créditos
+
+Este config começou como fork do **[amix/vimrc](https://github.com/amix/vimrc)** de [Amir Salihefendic](https://github.com/amix) — "The Ultimate Vim Configuration". Com o tempo foi ganhando CoC.nvim, fzf, testes automatizados e estrutura própria, até divergir tanto que não fazia mais sentido manter como fork. A estrutura base e o histórico inicial vêm do projeto original; os créditos ficam aqui.
 
 ## Licenca
 
