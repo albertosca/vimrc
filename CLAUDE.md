@@ -61,7 +61,7 @@ bash test/run.sh unit     # só uma suite (unit, integration, e2e, json, shell)
 - **Manager**: Pathogen (NÃO vim-plug, NÃO lazy.nvim)
 - **Diretório**: `plugins/` — cada subdiretório é um plugin
 - **Submodules**: 33 plugins são git submodules (`.gitmodules`), os demais são embedded
-- **Atualizar**: `cd plugins && bash update_plugins.sh`
+- **Atualizar**: ver `docs/updating-plugins.md`
 
 ## LSP
 
