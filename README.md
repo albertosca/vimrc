@@ -2,7 +2,7 @@
 
 Setup profissional para desenvolvimento poliglota: **Elixir/Phoenix, Ruby/Rails, JS/React/Node, Python, Go, Rust**.
 
-Baseado no [amix/vimrc](https://github.com/amix/vimrc), refatorado com CoC.nvim como LSP client, fzf como busca unificada, e 314 testes automatizados.
+Baseado no [amix/vimrc](https://github.com/amix/vimrc), refatorado com CoC.nvim como LSP client, fzf como busca unificada, e 316 testes automatizados.
 
 ## Estrutura
 
@@ -13,7 +13,7 @@ vimrcs/
   filetypes.vim          ← deteccao de filetype e indent por linguagem
   plugins.vim            ← Pathogen + config de plugins terceiros
   editor.vim             ← undo persistente, GUI, helpers
-plugins/                 ← 45 plugins (Pathogen)
+plugins/                 ← 49 plugins (Pathogen)
 test/                    ← suite de testes (vader, jest, shell)
 docs/                    ← documentacao
   keybindings.md         ← cheatsheet completo de atalhos
@@ -28,25 +28,34 @@ docs/                    ← documentacao
 **Automatica (recomendada):**
 
 ```bash
+git clone https://github.com/albertosca/vim-runtime.git ~/.vim_runtime
+bash ~/.vim_runtime/install.sh
+```
+
+> **Pré-requisitos:** Vim 9.1+, **Node.js** (sem ele o CoC/LSP não carrega),
+> git e ripgrep. Setup detalhado por OS, primeiro-run e troubleshooting em
+> **[docs/setup.md](docs/setup.md)**.
+
+O `install.sh` e idempotente e faz backup do que ja existir. Ele inicializa
+os submodules um a um (resiliente), cria `~/.vimrc` apontando para
+`vimrc_example`, e linka `coc-settings.json` em `~/.vim/coc-settings.json`.
+
+**Alternativa com `--recursive`** (submodules estao saudaveis, tambem funciona):
+
+```bash
 git clone --recursive https://github.com/albertosca/vim-runtime.git ~/.vim_runtime
 bash ~/.vim_runtime/install.sh
 ```
 
-O `install.sh` e idempotente e faz backup do que ja existir. Ele:
-inicializa os submodules, cria `~/.vimrc` apontando para `vimrc_example`, e
-linka `coc-settings.json` em `~/.vim/coc-settings.json` (config do LSP).
-
 **Manual:**
 
 ```bash
-git clone --recursive https://github.com/albertosca/vim-runtime.git ~/.vim_runtime
-ln -sf ~/.vim_runtime/vimrc_example ~/.vimrc           # carrega o runtime
+git clone https://github.com/albertosca/vim-runtime.git ~/.vim_runtime
+git -C ~/.vim_runtime submodule update --init
+ln -sf ~/.vim_runtime/vimrc_example ~/.vimrc
 mkdir -p ~/.vim
-ln -sf ~/.vim_runtime/coc-settings.json ~/.vim/coc-settings.json   # config do CoC
+ln -sf ~/.vim_runtime/coc-settings.json ~/.vim/coc-settings.json
 ```
-
-> Esqueceu o `--recursive`? Recupere os plugins com:
-> `git -C ~/.vim_runtime submodule update --init --recursive`
 
 O `~/.vimrc` (via `vimrc_example`) carrega nesta ordem — a ultima definicao vence:
 
@@ -60,25 +69,22 @@ source ~/.vim_runtime/vimrcs/editor.vim
 source ~/.vim_runtime/configs.vim
 ```
 
-## Plugins (50)
+## Plugins (49)
 
 | Categoria | Plugins |
 |---|---|
-| **LSP / Completion** | coc.nvim (21 extensoes), vim-snippets |
+| **LSP / Completion** | coc.nvim (25 extensoes), vim-snippets |
 | **IA** | copilot-chat.vim, vim-claude-code |
 | **Busca** | fzf, fzf.vim |
 | **Navegacao** | NERDTree, vim-rooter, vim-projectionist, vim-rails, vim-tmux-navigator |
 | **Git** | vim-fugitive, vim-gitgutter, gv.vim |
 | **Edicao** | vim-surround, auto-pairs, vim-visual-multi, vim-commentary, vim-endwise, vim-repeat, tabular, vim-expand-region, vim-indent-object, vim-unimpaired, vim-abolish, vim-closetag, vim-matchup, vim-sleuth |
 | **Testes** | vim-test, vimux |
-| **Linguagens** | vim-elixir, vim-mix-format, vimix, vim-go, rust.vim, vim-jsx-improve, vim-js-pretty-template, vim-mdx-js, vim-markdown |
+| **Linguagens** | vim-elixir, vim-mix-format, vim-go, rust.vim, vim-jsx-improve, vim-js-pretty-template, vim-mdx-js, vim-markdown |
 | **Database** | vim-dadbod, vim-dadbod-ui, vim-dadbod-completion |
 | **UI** | lightline.vim, gruvbox, vim-devicons, vim-nerdtree-syntax-highlight, undotree, goyo.vim, vim-obsession, set_tabline |
 
-**Atualizar plugins:**
-```bash
-cd ~/.vim_runtime/plugins && bash update_plugins.sh
-```
+**Atualizar plugins:** veja o guia em **[docs/updating-plugins.md](docs/updating-plugins.md)**.
 
 ## Atalhos
 
@@ -99,24 +105,29 @@ Destaques:
 
 ## Extensoes CoC
 
+25 extensoes instaladas automaticamente na primeira abertura do Vim:
+
 | Extensao | Cobertura |
 |---|---|
 | coc-elixir | Elixir LSP (ElixirLS) |
-| coc-solargraph | Ruby LSP |
 | coc-tsserver | TypeScript, JavaScript, React |
 | coc-pyright | Python LSP |
+| coc-go | Go LSP (gopls) |
 | coc-css, coc-tailwindcss | CSS, Tailwind |
-| coc-eslint, coc-prettier | Linting e formatacao |
+| coc-eslint, coc-prettier, coc-stylelint, coc-stylelintplus | Linting e formatacao |
 | coc-emmet | Expansao HTML/JSX |
 | coc-snippets | Snippets (vim-snippets) |
 | coc-sql | SQL completion |
 | coc-html, coc-json, coc-yaml, coc-xml, coc-sh | Markup e config |
 | coc-git, coc-yank | Git inline, historico de yanks |
 | coc-docker, coc-browser, coc-markdownlint | Docker, browser APIs, markdown |
+| coc-markdown-preview-enhanced, coc-webview | Preview de markdown |
+
+> Ruby e Rust nao vem com LSP por padrao — veja **[docs/setup.md](docs/setup.md)**.
 
 ## Testes
 
-309 testes automatizados em 5 suites:
+316 testes automatizados em 5 suites:
 
 ```bash
 bash test/run.sh          # compacto — uma linha por suite
@@ -128,13 +139,13 @@ bash test/run.sh unit     # rodar uma suite especifica
 ```
   Vim Config Test Suite
   ─────────────────────────────────────────────────────
-  ✓  shell            41 passed  1 warn  0 failed
+  ✓  shell            48 passed  1 warn  0 failed
   ✓  unit             90 passed  0 failed
   ✓  integration      131 passed  0 failed
   ✓  e2e              19 passed  0 failed
   ✓  jest             28 passed  0 failed
   ─────────────────────────────────────────────────────
-  ✓ 309 passed   all green
+  ✓ 316 passed   all green
 ```
 
 Detalhes da arquitetura de testes em **[docs/test_plan.md](docs/test_plan.md)**.
